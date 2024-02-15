@@ -1,0 +1,17 @@
+version: "2.1"
+
+networks:
+  test:
+
+services:
+  e-contract-api:
+    container_name: e-contract-api
+    image: e-contract-api:1.5
+    build: .
+    networks:
+      - test
+    ports:
+      - 3000:3000
+    env_file: ./.env
+    volumes:
+      - ./wallets:/usr/src/app/wallets

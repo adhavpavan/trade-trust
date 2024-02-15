@@ -1,0 +1,121 @@
+{
+    "result": [
+        {
+            "TxId": "613ad7a9137ca50a557ac3e212df49739c5c4c8d0b404bfdc471d09fe4fd38fe",
+            "Value": {
+                "id": "-36SnKA_aB",
+                "typeOfContract": "t",
+                "title": "t",
+                "owner": "Org1",
+                "description": "",
+                "firstParty": "t",
+                "secondParty": "t",
+                "status": "InProgress",
+                "steps": [
+                    {
+                        "description": "step 1 description",
+                        "status": "Approved",
+                        "user": {
+                            "name": "user",
+                            "email": "pavan@gmail.com",
+                            "department": "Legal",
+                            "role": "Approver",
+                            "org": "Org1"
+                        },
+                        "comment": "This is comment",
+                        "addedAt": 1600710216848
+                    },
+                    {
+                        "description": "step 2 description",
+                        "status": "Approved",
+                        "user": {
+                            "name": "user",
+                            "email": "pavan@gmail.com",
+                            "department": "Legal",
+                            "role": "Approver",
+                            "org": "Org1"
+                        },
+                        "comment": "This is comment",
+                        "addedAt": 1600710879415
+                    }
+                ],
+                "document": {
+                    "id": "6iy2BsXF6B",
+                    "name": "TestFile",
+                    "url": "https://liqtrace.s3.amazonaws.com/1600710217099-TestFile.pdf",
+                    "contentHash": "7c2ca705f9ae6476531f4a2c638c0a07109de553"
+                },
+                "department": "Finantial",
+                "comments": [
+                    "Contract Created"
+                ],
+                "startDate": 1599762600000,
+                "endDate": 1600799400000,
+                "addedAt": 1600710216848,
+                "creator": {
+                    "name": "user",
+                    "email": "pavan@gmail.com",
+                    "department": "Legal",
+                    "role": "Approver",
+                    "org": "Org1"
+                },
+                "docType": "Contract"
+            },
+            "Timestamp": "2020-09-21 17:54:40.359 +0000 UTC",
+            "IsDelete": "false"
+        },
+        {
+            "TxId": "d1b2383c96c3dbf3ac4aed8d99c83beb0c23f5dff7bf0173dc6ad7e9ecb3dbf7",
+            "Value": {
+                "id": "-36SnKA_aB",
+                "typeOfContract": "t",
+                "title": "t",
+                "owner": "Org1",
+                "description": "",
+                "firstParty": "t",
+                "secondParty": "t",
+                "status": "InProgress",
+                "steps": [
+                    {
+                        "description": "step 1 description",
+                        "status": "Approved",
+                        "user": {
+                            "name": "user",
+                            "email": "pavan@gmail.com",
+                            "department": "Legal",
+                            "role": "Approver",
+                            "org": "Org1"
+                        },
+                        "comment": "This is comment",
+                        "addedAt": 1600710216848
+                    }
+                ],
+                "document": {
+                    "id": "6iy2BsXF6B",
+                    "name": "TestFile",
+                    "url": "https://liqtrace.s3.amazonaws.com/1600710217099-TestFile.pdf",
+                    "contentHash": "7c2ca705f9ae6476531f4a2c638c0a07109de553"
+                },
+                "department": "Finantial",
+                "comments": [
+                    "Contract Created"
+                ],
+                "startDate": 1599762600000,
+                "endDate": 1600799400000,
+                "addedAt": 1600710216848,
+                "creator": {
+                    "name": "user",
+                    "email": "pavan@gmail.com",
+                    "department": "Legal",
+                    "role": "Approver",
+                    "org": "Org1"
+                },
+                "docType": "Contract"
+            },
+            "Timestamp": "2020-09-21 17:43:38.417 +0000 UTC",
+            "IsDelete": "false"
+        }
+    ],
+    "error": null,
+    "errorData": null
+}

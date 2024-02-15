@@ -1,0 +1,41 @@
+openssl x509 -in pavan.pem -text -noout
+
+Certificate:
+    Data:
+        Version: 3 (0x2)
+        Serial Number:
+            15:6f:56:61:ee:4d:91:f7:99:fe:7f:2e:7d:fc:25:e8:67:b5:f9:b3
+        Signature Algorithm: ecdsa-with-SHA256
+        Issuer: C = US, ST = North Carolina, O = Hyperledger, OU = Fabric, CN = fabric-ca-server
+        Validity
+            Not Before: Oct  8 06:14:00 2022 GMT
+            Not After : Oct  8 09:18:00 2023 GMT
+        Subject: OU = org1 + OU = client + OU = department1, CN = user64@gmail.com
+        Subject Public Key Info:
+            Public Key Algorithm: id-ecPublicKey
+                Public-Key: (256 bit)
+                pub:
+                    04:0e:3c:62:97:a3:e3:7d:20:c6:be:4e:ac:ff:85:
+                    27:09:4a:ce:5e:5c:6b:60:28:cd:7d:15:1d:17:54:
+                    34:a3:27:be:a3:be:0c:97:2d:ee:9c:f1:a7:40:f0:
+                    14:78:e1:29:a3:84:f9:8c:9c:e6:a1:61:b5:90:ce:
+                    a4:3d:29:a6:53
+                ASN1 OID: prime256v1
+                NIST CURVE: P-256
+        X509v3 extensions:
+            X509v3 Key Usage: critical
+                Digital Signature
+            X509v3 Basic Constraints: critical
+                CA:FALSE
+            X509v3 Subject Key Identifier: 
+                B7:92:7A:43:CC:0B:27:EC:89:1B:AB:3F:3E:B2:EB:85:54:37:3A:DF
+            X509v3 Authority Key Identifier: 
+                keyid:3A:52:C3:CC:FB:DF:34:3B:E6:71:0F:38:D8:24:54:21:78:38:2E:C0
+
+            1.2.3.4.5.6.7.8.1: 
+                {"attrs":{"role":"Seller"}}
+    Signature Algorithm: ecdsa-with-SHA256
+         30:45:02:21:00:e6:5a:c5:7d:3a:7a:f2:e7:a7:ab:33:aa:cb:
+         71:23:5c:b3:60:e7:8a:3f:0d:fd:7c:c5:1d:14:ea:ea:95:dd:
+         b1:02:20:4d:f0:3a:df:53:1f:89:ae:15:99:a7:6a:18:de:36:
+         7b:a2:b5:ac:e4:77:53:bb:1f:d2:ae:7a:e6:ca:1e:81:7c

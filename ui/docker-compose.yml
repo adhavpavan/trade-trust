@@ -1,0 +1,16 @@
+version: "3.4"
+
+networks:
+  test:
+
+services:
+  e-contract-ui:
+    container_name: e-contract-ui
+    image: e-contract:1.4
+    env_file: ./.env
+    build:
+      context: .
+    networks:
+      - test
+    ports:
+      - 3002:3000

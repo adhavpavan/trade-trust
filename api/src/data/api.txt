@@ -1,0 +1,29 @@
+
+
+
+
+Organization:
+  - Add Orgs
+        - Orgname, email, password, orgType:[Exporter, Bank, Transporter, Wholeseller]
+  - Get Orgs
+    -
+
+User
+  - Add User  
+      userName, email, password
+
+Auth
+  - Login
+
+
+Lot
+  - Add Lot
+  - Get Lot 
+  - Add eBL
+  - Add Invoice
+  - Add pOD
+  verify eBL
+
+
+  Screens
+  1) Login
