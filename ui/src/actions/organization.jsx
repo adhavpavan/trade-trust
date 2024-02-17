@@ -44,7 +44,7 @@ export function addORG(data) {
     return dispatch => {
 
         dispatch(createAction(START_ADD_ORGS));
-        return Api.post(`/organizations`, data, headers())
+        return Api.post(`/v1/organizations`, data, headers())
             .then(resp => {
                 dispatch(createAction(END_LOADING))
                 console.log("action : getting response ======================resp==================", resp)
