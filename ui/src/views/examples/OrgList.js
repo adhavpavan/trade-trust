@@ -28,13 +28,15 @@ import {
   UncontrolledTooltip,
   Button,
   Col,
+  CardBody,
 } from "reactstrap";
 import { useDispatch, useSelector } from "react-redux";
 import * as UserAction from "../../actions/user";
 import Axios from "axios";
-import AddUser from "./AddUser";
+import AddOrg from "./AddOrg";
+import * as OrgActions from "../../actions/organization";
 
-export default function Admin() {
+export default function OrgList() {
   let history = useHistory();
   const dispatch = useDispatch();
   const isLoading = useSelector((state) => state.User.isLoading);
@@ -42,11 +44,30 @@ export default function Admin() {
   const userProfileData = useSelector(
     (state) => state?.User?.login?.decodedData
   );
+  const orgList = [{
+    "name": "Org1",
+    "orgType": "Type 1."
+  }, {
+    "name": "Org2",
+    "orgType": "Type 2"
+  }, {
+    "name": "Org3",
+    "orgType": "Type 1"
+  }, {
+    "name": "Org4",
+    "orgType": "Type 1"
+  }, {
+    "name": "Org5",
+    "orgType": "Type 2"
+  }];
 
   const [paginationData, setPaginationData] = useState({ selectedPage: 0 });
   // const [isLoading, setIsLoading] = useState(false)
 
   // const [userList, setUserList] = useState([])
+
+  const [orgListData, setOrgListData] = useState([]);
+
 
   const [pageCount, setPageCount] = useState([]);
 
@@ -83,78 +104,67 @@ export default function Admin() {
     });
   };
 
+  
+    useEffect(() => {
+      console.log(`-------------------------------`);
+      
+      const fetchData = async () => {
+        try {
+            const response = await dispatch(OrgActions.getORGList({
+                page: paginationData.selectedPage,
+                size: 10,
+            }));
+            console.log("response from org list", response);
+            // Update state with fetched data
+            setOrgListData(response);
+        } catch (error) {
+            console.error('Error fetching organization data:', error);
+        }
+    };
+
+    fetchData(); // Fetch data when component mounts
+
+
+      
+
+    }, []);
   useEffect(() => {
     console.log("pagination data changed", paginationData);
-    getUserList();
+    
+    dispatch(OrgActions.getORGList({
+      page: paginationData.selectedPage,
+      size: 10,
+    }));
   }, [paginationData]);
 
-  useEffect(() => {
-    console.log(`-------------------------------`);
-    let token = localStorage.getItem("token");
-    console.log(`token is -------------: ${token}`);
-    if (!userProfileData || !localStorage.getItem('token')) {
-      console.log(`Triggered`);
-      history.push("auth/login");
-    }
-
-    getUserList();
-  }, []);
-
-  useEffect(() => {
-    console.log("===================", "received user", userList);
-  }, [userList]);
-
-  const getUserList = () => {
-    UserAction.startLoading();
-    dispatch(
-      UserAction.getUserList({
-        pagination: { selectedPage: paginationData.selectedPage },
-        take: 5,
-      })
-    )
-      .then(() => {
-        UserAction.endLoading();
-      })
-      .catch((err) => {
-        UserAction.endLoading();
-      });
-  };
-
-  const updateUser = (index, status) => {
-    // setIsLoading(true)
-    console.log(`email id is : ${userList?.docs[index]?.email}`);
-    // let userMail = { email: userList?.docs[index]?.email };
-    let updatedStatus = status === "active" ? "inactive" : "active";
-    dispatch(
-      UserAction.updateUserStatus({
-        id: userList?.docs[index]?.id,
-        body: { status: updatedStatus },
-      })
-    ).then(() => {
-      console.log(`User status changed successfully`);
-      getUserList();
-    });
-  };
 
 
-  let view = userList?.docs?.map((user, i) => (
+
+
+  // let view = userList?.docs?.map((user, i) => (
+  //   <tr>
+  //     <td> {user.name}</td>
+  //     <td> {user.email}</td>
+  //     <td> {user.status}</td>
+  //     <td>{user.department}</td>
+  //     <td>
+  //       <Button
+  //         className="my-1"
+  //         color="primary"
+  //         onClick={() => {
+  //           updateUser(i, user.status);
+  //         }}
+  //         type="button"
+  //       >
+  //         {user.status == "active" ? "Deactivate" : "Activate"}
+  //       </Button>
+  //     </td>
+  //   </tr>
+  // ));
+  let view = orgListData?.map((org, i) => (
     <tr>
-      <td> {user.name}</td>
-      <td> {user.email}</td>
-      <td> {user.status}</td>
-      <td>{user.department}</td>
-      <td>
-        <Button
-          className="my-1"
-          color="primary"
-          onClick={() => {
-            updateUser(i, user.status);
-          }}
-          type="button"
-        >
-          {user.status === "active" ? "Deactivate" : "Activate"}
-        </Button>
-      </td>
+      <td> {org.name}</td>
+      <td> {org.type}</td>
     </tr>
   ));
 
@@ -181,19 +191,42 @@ export default function Admin() {
           <div className="col">
             <Card className="shadow">
               <CardHeader className="border-0">
+
                 <FormGroup row>
                   <Col sm={9}>
-                    <h3 className="mb-0">User List</h3>
+                    <h3 className="mb-0">Organization List</h3>
                   </Col>
                   <Col sm={3}>
-                    <Button className="my-1" color="primary" onClick={toggleModal} type="button">{"Add User"}</Button>
+                    <Button className="my-1" color="primary" onClick={toggleModal} type="button">{"Add Organization"}</Button>
                   </Col>
                 </FormGroup>
                 {/* <h3 className="mb-0">User List</h3> */}
 
-                <AddUser toggle={toggleModal} modal={modal} />
+                <AddOrg toggle={toggleModal} modal={modal} />
               </CardHeader>
               <Card body>
+                <Table className="align-items-center table-flush"
+                  responsive>
+                  <thead className="thead-light">
+                    <tr>
+                      <th>Organization Name</th>
+                      <th>Organization Type</th>
+
+                      <th scope="col" />
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {view}
+                    {orgList.map((item, index) => {
+                      <tr key={index}>
+                        <td>{item.name}</td>
+                        <td>{item.orgType}</td>
+                      </tr>;
+                    })}
+                  </tbody>
+                </Table>
+              </Card>
+              {/* <Card body>
                 {isLoading ? (
                   <div className="row justify-content-center">
                     <ProgressBar />{" "}
@@ -250,8 +283,8 @@ export default function Admin() {
                           containerClassName={"pagination"}
                           subContainerClassName={"pages pagination"}
                           activeClassName={"active"}
-                        />
-                        {/* <div className="pagination">
+                        /> */}
+              {/* <div className="pagination">
                           <button
                             onClick={() => handlePageClick(currentPage - 1)}
                             disabled={currentPage === 0}
@@ -267,14 +300,14 @@ export default function Admin() {
                           </button>
                         </div> */}
 
-                        {/* <Items currentItems={1} /> */}
-                      </>
+              {/* <Items currentItems={1} /> */}
+              {/* </>
                     ) : (
                       <NoDataCard status={"Users"} />
                     )}
                   </>
                 )}
-              </Card>
+              </Card> */}
             </Card>
           </div>
         </Row>

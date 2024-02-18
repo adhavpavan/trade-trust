@@ -26,6 +26,9 @@ import Icons from './views/examples/Icons.js'
 import Dashboard from "./views/Dashboard/Dashboard.js";
 import Admin from "./views/examples/admin.js"
 import ContractHistory from "./views/examples/ContractHistory.js";
+import LoginOrg from "views/examples/LoginOrg.js";
+import RegisterOrg from "views/examples/RegisterOrg.js";
+import OrgList from "views/examples/OrgList.js";
 
 
 
@@ -42,6 +45,13 @@ var routes = [
     name: "Admin",
     icon: "ni ni-tv-2 text-primary",
     component: Admin,
+    layout: "/admin"
+  },
+  {
+    path: "/org",
+    name: "Organizations",
+    icon: "ni ni-tv-2 text-primary",
+    component: OrgList,
     layout: "/admin"
   },
   {
@@ -71,6 +81,20 @@ var routes = [
     icon: "ni ni-circle-08 text-pink",
     component: Register,
     layout: "/auth"
-  }
+  },
+  // {
+  //   path: "/loginOrg",
+  //   name: "Login Organization",
+  //   icon: "ni ni-key-25 text-info",
+  //   component: LoginOrg,
+  //   layout: "/auth"
+  // },
+  // {
+  //   path: "/registerOrg",
+  //   name: "Register Organization",
+  //   icon: "ni ni-circle-08 text-pink",
+  //   component: RegisterOrg,
+  //   layout: "/auth"
+  // }
 ];
 export default routes;

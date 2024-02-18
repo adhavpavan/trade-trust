@@ -8,8 +8,9 @@ const createOrganization = {
   body: Joi.object().keys({
     name: Joi.string().required(),
     logo: Joi.string().optional(),
+    type: Joi.string().optional(),
     // id: Joi.string().custom(objectId),  //TODO: remove this once we have a way to create a root organization
-    // parentId: Joi.number().optional(),
+    parentId: Joi.number().optional(),
   }),
 };
 

@@ -23,19 +23,21 @@ export const startLoading = () => createAction(START_LOADING)
 export const endLoading = () => createAction(END_LOADING)
 
 export function getORGList(data) {
-    return dispatch => {
+    return async dispatch => {
         dispatch(createAction(START_GET_ORGS));
-        return Api.get(`/organizations`, headers())
-            .then(response => {
-                console.log(`Orgs fetched successfully`)
-                console.log("000000000000000000000000000000000000000000000000000000000000000000000000", response.data.payload)
-                dispatch(createAction(END_GET_ORGS, response.data.payload));
-                return response.data.data
-            }).catch(err => {
-                dispatch(createAction(END_GET_ORGS));
-                console.log("Error occurred", null, err)
-                return null
-            })
+        try {
+            const { page, size } = data;
+            const response = await Api.get(`/v1/organizations?page=${page}&size=${size}`,
+                headers());
+            console.log(`Orgs fetched successfully`);
+            console.log("000000000000000000000000000000000000000000000000000000000000000000000000", response.data.payload);
+            dispatch(createAction(END_GET_ORGS, response.data.payload));
+            return response.data.payload;
+        } catch (err) {
+            dispatch(createAction(END_GET_ORGS));
+            console.log("Error occurred", null, err);
+            return null;
+        }
 
     }
 }
@@ -44,7 +46,7 @@ export function addORG(data) {
     return dispatch => {
 
         dispatch(createAction(START_ADD_ORGS));
-        return Api.post(`/organizations`, data, headers())
+        return Api.post(`/v1/organizations`, data, headers())
             .then(resp => {
                 dispatch(createAction(END_LOADING))
                 console.log("action : getting response ======================resp==================", resp)
