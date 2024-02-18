@@ -6,6 +6,7 @@ const docsRoute = require('./docs.route');
 const agreementRoute = require('./agreement.route')
 const config = require('../../config/config');
 const qsccRoute = require('./qscc.route')
+const pdfRoute = require('./pdf.route')
 
 const router = express.Router();
 
@@ -30,6 +31,10 @@ const defaultRoutes = [
     path: '/qscc',
     route: qsccRoute,
   },
+  {
+    path: '/pdf',
+    route: pdfRoute,
+  }
 ];
 
 const devRoutes = [
