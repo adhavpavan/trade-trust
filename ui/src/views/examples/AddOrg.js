@@ -44,7 +44,7 @@ const AddOrg = (props) => {
             isInvalid = true
         }
         if (orgName == '') {
-            addToast(`Please add organisiton name`, {
+            addToast(`Please add organization name`, {
                 appearance: 'error',
                 autoDismiss: true,
             })
@@ -67,8 +67,15 @@ const AddOrg = (props) => {
     const addOrg = () => {
         console.log("Here****************");
 
-        const data = new FormData()
-        data.append('name', orgName)
+        // const data = new FormData()
+        // data.append('name', orgName)
+
+
+        const data = {
+            name: orgName,
+            type: orgType,
+            parentId: decodedData?.orgId,
+        }
 
         dispatch(Organization.addORG(data)).then(() => {
             addToast(`Organization created successfully`, {
@@ -87,8 +94,8 @@ const AddOrg = (props) => {
 
     const inputChangeHandler = (value, fieldName) => {
         switch (fieldName) {
-            case 'orgType': setOrgType(value); break;
-            case 'orgName': setOrgName(value); break;
+            case 'type': setOrgType(value); break;
+            case 'name': setOrgName(value); break;
 
             default:
                 break;
@@ -107,7 +114,7 @@ const AddOrg = (props) => {
                                 <FormGroup row>
                                     <Label sm={2}>Organization Name</Label>
                                     <Col sm={10}>
-                                        <Input type="text" invalid={isValidating && orgName == ''} onChange={e => { inputChangeHandler(e.target.value, 'orgName') }} placeholder="Enter Organization Name" />
+                                        <Input type="text" invalid={isValidating && orgName == ''} onChange={e => { inputChangeHandler(e.target.value, 'name') }} placeholder="Enter Organization Name" />
                                         <FormFeedback>*Required</FormFeedback>
                                     </Col>
                                 </FormGroup>
@@ -116,7 +123,7 @@ const AddOrg = (props) => {
                                     <FormGroup row>
                                         <Label sm={2}>Organization Type</Label>
                                         <Col sm={10}>
-                                            <Input invalid={isValidating && orgType == ''} onChange={e => { inputChangeHandler(e.target.value, 'orgType') }} placeholder="Enter Organization Type" />
+                                            <Input invalid={isValidating && orgType == ''} onChange={e => { inputChangeHandler(e.target.value, 'type') }} placeholder="Enter Organization Type" />
                                             <FormFeedback>*Required</FormFeedback>
                                         </Col>
                                     </FormGroup>

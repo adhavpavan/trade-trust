@@ -34,7 +34,7 @@ import { useDispatch, useSelector } from "react-redux";
 import * as UserAction from "../../actions/user";
 import Axios from "axios";
 import AddOrg from "./AddOrg";
-import { getORGList } from "actions/organization";
+import * as OrgActions from "../../actions/organization";
 
 export default function OrgList() {
   let history = useHistory();
@@ -46,7 +46,7 @@ export default function OrgList() {
   );
   const orgList = [{
     "name": "Org1",
-    "orgType": "Type 1"
+    "orgType": "Type 1."
   }, {
     "name": "Org2",
     "orgType": "Type 2"
@@ -65,6 +65,9 @@ export default function OrgList() {
   // const [isLoading, setIsLoading] = useState(false)
 
   // const [userList, setUserList] = useState([])
+
+  const [orgListData, setOrgListData] = useState([]);
+
 
   const [pageCount, setPageCount] = useState([]);
 
@@ -101,58 +104,41 @@ export default function OrgList() {
     });
   };
 
+  
+    useEffect(() => {
+      console.log(`-------------------------------`);
+      
+      const fetchData = async () => {
+        try {
+            const response = await dispatch(OrgActions.getORGList({
+                page: paginationData.selectedPage,
+                size: 10,
+            }));
+            console.log("response from org list", response);
+            // Update state with fetched data
+            setOrgListData(response);
+        } catch (error) {
+            console.error('Error fetching organization data:', error);
+        }
+    };
+
+    fetchData(); // Fetch data when component mounts
+
+
+      
+
+    }, []);
   useEffect(() => {
     console.log("pagination data changed", paginationData);
-    getORGList();
+    
+    dispatch(OrgActions.getORGList({
+      page: paginationData.selectedPage,
+      size: 10,
+    }));
   }, [paginationData]);
 
-  useEffect(() => {
-    console.log(`-------------------------------`);
-    let token = localStorage.getItem("token");
-    console.log(`token is -------------: ${token}`);
-    if (!userProfileData || !localStorage.getItem('token')) {
-      console.log(`Triggered`);
-      history.push("auth/login");
-    }
 
-    getUserList();
-  }, []);
 
-  useEffect(() => {
-    console.log("===================", "received user", userList);
-  }, [userList]);
-
-  const getUserList = () => {
-    UserAction.startLoading();
-    dispatch(
-      UserAction.getUserList({
-        pagination: { selectedPage: paginationData.selectedPage },
-        take: 5,
-      })
-    )
-      .then(() => {
-        UserAction.endLoading();
-      })
-      .catch((err) => {
-        UserAction.endLoading();
-      });
-  };
-
-  const updateUser = (index, status) => {
-    // setIsLoading(true)
-    console.log(`email id is : ${userList?.docs[index]?.email}`);
-    // let userMail = { email: userList?.docs[index]?.email };
-    let updatedStatus = status === "active" ? "inactive" : "active";
-    dispatch(
-      UserAction.updateUserStatus({
-        id: userList?.docs[index]?.id,
-        body: { status: updatedStatus },
-      })
-    ).then(() => {
-      console.log(`User status changed successfully`);
-      getUserList();
-    });
-  };
 
 
   // let view = userList?.docs?.map((user, i) => (
@@ -175,10 +161,10 @@ export default function OrgList() {
   //     </td>
   //   </tr>
   // ));
-  let view = orgList.map((org, i) => (
+  let view = orgListData?.map((org, i) => (
     <tr>
       <td> {org.name}</td>
-      <td> {org.orgType}</td>
+      <td> {org.type}</td>
     </tr>
   ));
 
@@ -223,8 +209,8 @@ export default function OrgList() {
                   responsive>
                   <thead className="thead-light">
                     <tr>
-                      <th>Org Name</th>
-                      <th>Org Type</th>
+                      <th>Organization Name</th>
+                      <th>Organization Type</th>
 
                       <th scope="col" />
                     </tr>

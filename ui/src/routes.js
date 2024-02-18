@@ -49,7 +49,7 @@ var routes = [
   },
   {
     path: "/org",
-    name: "Org",
+    name: "Organizations",
     icon: "ni ni-tv-2 text-primary",
     component: OrgList,
     layout: "/admin"

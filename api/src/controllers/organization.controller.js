@@ -15,14 +15,16 @@ const getOrganizations = catchAsync(async (req, res) => {
   const { limit, offset } = getPagination(page, size);
 
   let filter = {
-    orgId: parseInt(req.loggerInfo.user.orgId),
+    parentId: parseInt(req.loggerInfo.user.orgId),
   };
   console.log('------orgid is---', filter);
 
-  const options = { offset, limit, sort: { createdAt: -1 } };
+  const options = { offset, limit };
   console.log('---optipns is---', options);
 
-  const result = await organizationService.queryOrganizations(filter, options);
+  const result = await organizationService.queryOrganizations(
+    filter,
+     );
   res.status(httpStatus.OK).send(getSuccessResponse(httpStatus.OK, 'Organizations fetched successfully', result));
 });
 
