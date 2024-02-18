@@ -13,7 +13,21 @@ router
   .post(
     // adminAuth,
     upload.single('pdf'),
-     pdfController.parsePDF);
+     pdfController.parseDeliveryProofPDF);
+
+router
+    .route('/extract/invoice')
+    .post(
+      // adminAuth,
+      upload.single('pdf'),
+      pdfController.parseInvoicePDF);
+
+router
+    .route('/extract/house_bill')
+    .post(
+      // adminAuth,
+      upload.single('pdf'),
+      pdfController.parseHouseBillPDF);
   
 
 module.exports = router;
