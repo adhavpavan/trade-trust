@@ -104,33 +104,33 @@ export default function OrgList() {
     });
   };
 
-  
-    useEffect(() => {
-      console.log(`-------------------------------`);
-      
-      const fetchData = async () => {
-        try {
-            const response = await dispatch(OrgActions.getORGList({
-                page: paginationData.selectedPage,
-                size: 10,
-            }));
-            console.log("response from org list", response);
-            // Update state with fetched data
-            setOrgListData(response);
-        } catch (error) {
-            console.error('Error fetching organization data:', error);
-        }
+
+  useEffect(() => {
+    console.log(`-------------------------------`);
+
+    const fetchData = async () => {
+      try {
+        const response = await dispatch(OrgActions.getORGList({
+          page: paginationData.selectedPage,
+          size: 10,
+        }));
+        console.log("response from org list", response);
+        // Update state with fetched data
+        setOrgListData(response);
+      } catch (error) {
+        console.error('Error fetching organization data:', error);
+      }
     };
 
     fetchData(); // Fetch data when component mounts
 
 
-      
 
-    }, []);
+
+  }, []);
   useEffect(() => {
     console.log("pagination data changed", paginationData);
-    
+
     dispatch(OrgActions.getORGList({
       page: paginationData.selectedPage,
       size: 10,
@@ -204,111 +204,81 @@ export default function OrgList() {
 
                 <AddOrg toggle={toggleModal} modal={modal} />
               </CardHeader>
-              <Card body>
-                <Table className="align-items-center table-flush"
-                  responsive>
-                  <thead className="thead-light">
-                    <tr>
-                      <th>Organization Name</th>
-                      <th>Organization Type</th>
+              {isLoading ? (
+                <div className="row justify-content-center">
+                  <ProgressBar />{" "}
+                </div>
+              ) : (
+                <>
+                  {orgList.length ? (
+                    <>
+                      <Table
+                        className="align-items-center table-flush"
+                        responsive
+                      >
+                        <thead className="thead-light">
+                          <tr>
+                            <th>Organization Name</th>
+                            <th>Organization Type</th>
 
-                      <th scope="col" />
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {view}
-                    {orgList.map((item, index) => {
-                      <tr key={index}>
-                        <td>{item.name}</td>
-                        <td>{item.orgType}</td>
-                      </tr>;
-                    })}
-                  </tbody>
-                </Table>
-              </Card>
-              {/* <Card body>
-                {isLoading ? (
-                  <div className="row justify-content-center">
-                    <ProgressBar />{" "}
-                  </div>
-                ) : (
-                  <>
-                    {userList?.docs?.length ? (
-                      <>
-                        <Table
-                          className="align-items-center table-flush"
-                          responsive
+                            <th scope="col" />
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {view}
+                          {orgList.map((item, index) => {
+                            <tr key={index}>
+                              <td>{item.name}</td>
+                              <td>{item.orgType}</td>
+                            </tr>;
+                          })}
+                        </tbody>
+                      </Table>
+                      <Container>
+                        <Row>
+                          <Col>
+                            <hr />
+                          </Col>
+                        </Row>
+                      </Container>
+                      <ReactPaginate
+                        previousLabel={"Previous"}
+                        nextLabel={"Next"}
+                        breakLabel={"..."}
+                        breakClassName={"break-me"}
+                        pageCount={pageCount}
+                        marginPagesDisplayed={3}
+                        pageRangeDisplayed={5}
+                        onPageChange={handlePageClick}
+                        containerClassName={"pagination"}
+                        subContainerClassName={"pages pagination"}
+                        activeClassName={"active"}
+                      />
+                      {/* <div className="pagination">
+                        <button
+                          onClick={() => handlePageClick(currentPage - 1)}
+                          disabled={currentPage === 0}
                         >
-                          <thead className="thead-light">
-                            <tr>
-                              <th>Username</th>
-                              <th>Email</th>
-                              <th scope="col">Status</th>
-                              <th scope="col">Department</th>
-                              <th scope="col">Action</th>
+                          Previous
+                        </button>
+                        <span>Page {currentPage + 1}</span>
+                        <button
+                          onClick={() => handlePageClick(currentPage + 1)}
+                          disabled={currentPage === pageCount - 1}
+                        >
+                          Next
+                        </button>
+                      </div>
 
-                              <th scope="col" />
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {view}
-                            {userList.docs.map((item, index) => {
-                              <tr key={index}>
-                                <td>{item.Username}</td>
-                                <td>{item.Email}</td>
-                                <td>{item.Status}</td>
-                                <td>{item.Department}</td>
-                                <td>{item.Action}</td>
-                              </tr>;
-                            })}
-                          </tbody>
-                        </Table>
-                        <Container>
-                          <Row>
-                            <Col>
-                              <hr />
-                            </Col>
-                          </Row>
-                        </Container>
-
-                        <ReactPaginate
-                          previousLabel={"Previous"}
-                          nextLabel={"Next"}
-                          breakLabel={"..."}
-                          breakClassName={"break-me"}
-                          pageCount={pageCount}
-                          marginPagesDisplayed={3}
-                          pageRangeDisplayed={5}
-                          onPageChange={handlePageClick}
-                          containerClassName={"pagination"}
-                          subContainerClassName={"pages pagination"}
-                          activeClassName={"active"}
-                        /> */}
-              {/* <div className="pagination">
-                          <button
-                            onClick={() => handlePageClick(currentPage - 1)}
-                            disabled={currentPage === 0}
-                          >
-                            Previous
-                          </button>
-                          <span>Page {currentPage + 1}</span>
-                          <button
-                            onClick={() => handlePageClick(currentPage + 1)}
-                            disabled={currentPage === pageCount - 1}
-                          >
-                            Next
-                          </button>
-                        </div> */}
-
-              {/* <Items currentItems={1} /> */}
-              {/* </>
-                    ) : (
-                      <NoDataCard status={"Users"} />
-                    )}
-                  </>
-                )}
-              </Card> */}
+                      <Items currentItems={1} /> */}
+                    </>
+                  ) : (
+                    <NoDataCard status={"Users"} />
+                  )}
+                </>
+              )}
             </Card>
+            {/* </Card> */}
           </div>
         </Row>
       </Container>
