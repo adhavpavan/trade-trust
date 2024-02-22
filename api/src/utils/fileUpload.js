@@ -133,3 +133,22 @@ const uploadFile = async (data, orgName) => {
 };
 module.exports.imageUpload = imageUpload;
 module.exports.uploadFile = uploadFile;
+
+//how to use uploadFile
+// const uploadFile = require('./fileUpload').uploadFile;
+// const file = {
+  // originalname: 'test.pdf',
+  // mimetype: 'application/pdf',
+  // path: 'test.pdf',
+// };
+// const orgName = 'org1';
+// const fileMetadata = await uploadFile(file, orgName);
+// console.log(fileMetadata);
+// {
+//   id: '98463829463829463829463829463829463829463829463829463829463829463829463829463829463829463829463829463829463829463829463829463829463829463829463829463829463829463829463829463829463829
+//   orgName: 'org1',
+//   name: 'test.pdf',
+//   url: 'https://s3.amazonaws.com/org1/9846382946382
+//   contentHash: '984638294638294638294638
+// }
+
