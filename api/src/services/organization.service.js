@@ -26,7 +26,7 @@ const createOrganization = async (orgBody) => {
  * @returns {Promise<QueryResult>}
  */
 const queryOrganizations = async (filter, options) => {
-  return Organization.find(filter, options);
+  return Organization.paginate(filter, options);
 };
 
 /**
