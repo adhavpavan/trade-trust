@@ -2,6 +2,7 @@ const express = require('express');
 const authRoute = require('./auth.route');
 const userRoute = require('./user.route');
 const organizationRoute = require('./organization.route');
+const lotRoute = require('./lot.route');
 const docsRoute = require('./docs.route');
 const agreementRoute = require('./agreement.route')
 const config = require('../../config/config');
@@ -20,10 +21,6 @@ const defaultRoutes = [
     route: userRoute,
   },
   {
-    path: '/organizations',
-    route: organizationRoute,
-  },
-  {
     path: '/agreements',
     route: agreementRoute,
   },
@@ -32,9 +29,17 @@ const defaultRoutes = [
     route: qsccRoute,
   },
   {
+    path: '/organizations',
+    route: organizationRoute,
+  },
+  {
     path: '/pdf',
     route: pdfRoute,
-  }
+  },
+  {
+    path: '/lots',
+    route: lotRoute,
+  },
 ];
 
 const devRoutes = [
