@@ -1,9 +1,11 @@
 import { combineReducers } from 'redux';
+import * as OrganizationActions from '../actions/organization';
 
-import * as OrganizationActions from '../actions/organization'
-
-const initialORGListState = []
-
+const initialORGListState = {
+    docs: [],
+    totalPages: 0,
+    totalDocs: 0
+};
 
 function getIsLoading(state = false, action) {
     switch (action.type) {
@@ -16,22 +18,27 @@ function getIsLoading(state = false, action) {
     }
 }
 
-
 function getORGList(state = initialORGListState, action) {
     switch (action.type) {
         case OrganizationActions.END_GET_ORGS:
-            console.log("===============reducer==========================", action)
             if (action.error) {
-                throw action.error
+                // Handle error state
+                return state;
             }
-            return action.payload.orgs || state;
+            return {
+                ...state,
+                docs: action.payload.docs ?? [],
+                totalPages: action.payload.totalPages,
+                totalDocs: action.payload.totalDocs
+            };
         default:
             return state;
     }
 }
+
 const Organization = combineReducers({
     orgList: getORGList,
     isLoading: getIsLoading
-})
+});
 
-export default Organization
+export default Organization;

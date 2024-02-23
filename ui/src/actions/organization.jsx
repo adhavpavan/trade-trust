@@ -26,13 +26,21 @@ export function getORGList(data) {
     return async dispatch => {
         dispatch(createAction(START_GET_ORGS));
         try {
-            const { page, size } = data;
-            const response = await Api.get(`/v1/organizations?page=${page}&size=${size}`,
+            const { pagination, size } = data;
+            const response = await Api.get(`/v1/organizations?page=${pagination}&size=${size}`,
                 headers());
             console.log(`Orgs fetched successfully`);
             console.log("000000000000000000000000000000000000000000000000000000000000000000000000", response.data.payload);
-            dispatch(createAction(END_GET_ORGS, response.data.payload));
-            return response.data.payload;
+            // const orgList = response.data.payload;
+            const { docs, hasNextPage, hasPrevPage, limit, nextPage, offset, page, pagingCounter, prevPage, totalDocs, totalPages } = response.data.payload;
+
+            dispatch(createAction(END_GET_ORGS, {
+                docs: docs,
+                totalPages: totalPages,
+                totalDocs: totalPages
+            }));
+            // Optionally, you can return an object containing the necessary key values
+            return { docs, hasNextPage, hasPrevPage, limit, nextPage, offset, page, pagingCounter, prevPage, totalDocs, totalPages };
         } catch (err) {
             dispatch(createAction(END_GET_ORGS));
             console.log("Error occurred", null, err);

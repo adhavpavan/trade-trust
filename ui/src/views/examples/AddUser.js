@@ -3,7 +3,9 @@ import { Button, Modal, ModalHeader, ModalBody, ModalFooter, FormFeedback, Card,
 import ProgressBar from './ProgressBar'
 import { useToasts } from 'react-toast-notifications'
 import { getTimeStamp } from '../../helper/utils'
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import * as UserAction from "../../actions/user";
+
 
 const AddUser = (props) => {
     const {
@@ -28,8 +30,9 @@ const AddUser = (props) => {
 
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
-    const [orgName, setOrgName] = useState('')
+    const [password, setPassword] = useState('')
     const [isValidating, setIsValidating] = useState(false)
+    const dispatch = useDispatch();
 
     const validateAndAddContract = () => {
         let isInvalid = false
@@ -50,8 +53,8 @@ const AddUser = (props) => {
             })
             isInvalid = true
         }
-        if (orgName == '') {
-            addToast(`Please add organisiton name`, {
+        if (password == '') {
+            addToast(`Please enter password`, {
                 appearance: 'error',
                 autoDismiss: true,
             })
@@ -59,7 +62,7 @@ const AddUser = (props) => {
         }
 
         if (!isInvalid) {
-            addUser()
+            addUser();
         }
 
     }
@@ -68,20 +71,30 @@ const AddUser = (props) => {
     const resetInput = () => {
         setEmail('');
         setName('');
-        setOrgName('');
+        setPassword('');
     };
 
 
-    const addUser = () => {
-
-    }
+    const addUser = async () => {
+        // UserAction.startLoading;
+        // const data = new FormData()
+        // data.append('name', name)
+        // data.append('email', email)
+        // data.append('password', password)
+        // // data.append('firstParty', decodedData?.orgId === 1 ? 'Org1' : "Org2")
+        // UserAction.startLoading;
+        // var response = await dispatch(UserAction.addUser(data)).then(() => {
+        //     UserAction.endLoading();
+        // });
+        // console.log(response);
+    };
 
 
     const inputChangeHandler = (value, fieldName) => {
         switch (fieldName) {
             case 'email': setEmail(value); break;
             case 'name': setName(value); break;
-            case 'orgName': setOrgName(value); break;
+            case 'password': setPassword(value); break;
 
             default:
                 break;
@@ -116,7 +129,9 @@ const AddUser = (props) => {
                                     <FormGroup row>
                                         <Label sm={2}>Organization Name</Label>
                                         <Col sm={10}>
-                                            <Input invalid={isValidating && orgName == ''} onChange={e => { inputChangeHandler(e.target.value, 'orgName') }} placeholder="Enter Organization name" />
+
+                                            <Input type="password" invalid={isValidating && password == ''} onChange={e => inputChangeHandler(e.target.value, 'password')} placeholder="Enter Password" />
+                                            {/* <Input invalid={isValidating && orgName == ''} onChange={e => { inputChangeHandler(e.target.value, 'orgName') }} placeholder="Enter Organization name" /> */}
                                             <FormFeedback>*Required</FormFeedback>
                                         </Col>
                                     </FormGroup>
