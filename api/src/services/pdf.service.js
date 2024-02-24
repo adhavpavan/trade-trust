@@ -288,8 +288,8 @@ function splitWithRegex(string) {
 
 module.exports = {
 
-    parseCustomerAddress,
-    parseDeliveryAddress,
+    // parseCustomerAddress,
+    // parseDeliveryAddress,
     parseInvoiceText,
     parseHouseBillText,
     formatFloatNumber,

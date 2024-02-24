@@ -1,13 +1,17 @@
 
 const express = require('express');
-const {auth, adminAuth} = require('../../middlewares/auth');
+const { auth, adminAuth } = require('../../middlewares/auth');
 const validate = require('../../middlewares/validate');
 const { lotValidation } = require('../../validations');
 const { lotController } = require('../../controllers');
+const multer = require('multer');
+
 // const userValidation = require('../../validations/lot.validation');
 // const userController = require('../../controllers/lot.controller');
 
 const router = express.Router();
+const upload = multer({ dest: 'uploads/' });
+
 
 // router
 // .route('/')
@@ -20,8 +24,15 @@ const router = express.Router();
 
 router
   .route('/')
-  .post(adminAuth, validate(lotValidation.createLot), lotController.createLot)
-  .get(adminAuth, validate(lotValidation.getLot), lotController.getLots);
+  .post(
+    // adminAuth,
+    //  validate(lotValidation.createLot), 
+    upload.single('xls'),
+    lotController.createLot)
+
+  .get(
+    // adminAuth, 
+    validate(lotValidation.getLot), lotController.getLots);
 
 module.exports = router;
 
