@@ -4,6 +4,7 @@ const mongoosePaginate = require('mongoose-paginate-v2');
 
 const lotSchema = mongoose.Schema({
 
+    //from xls
     vendor: { type: String, required: false },
     deadlineDate: { type: Date, required: false },
     orderingDate: { type: Date, required: false },
@@ -15,6 +16,14 @@ const lotSchema = mongoose.Schema({
     tax: { type: Number, required: false },
     unitOfMeasure: { type: String, required: false },
     shipperReference: { type: String, required: false },
+
+    //from request body
+    exporterId: { type: String, required: false },
+    bankId: { type: String, required: false },
+    wholeSellerId: { type: String, required: false },
+
+    //for internal use only
+    docType: { type: String, required: false },
 });
 
 

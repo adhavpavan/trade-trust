@@ -5,6 +5,7 @@ const { userService, lotService } = require('../services');
 const { getPagination } = require('../utils/pagination');
 const { getSuccessResponse } = require('../utils/Response');
 const xlsx = require("xlsx");
+const fs = require("fs");
 
 
 const createLot = catchAsync(async (req, res) => {
@@ -133,6 +134,7 @@ console.log("-----lot is-----", lot);
     const lotData = {
       ...lot,
       ...metaData,
+      docType: 'Lot',
     }
     finalLotData.push(lotData)
 
