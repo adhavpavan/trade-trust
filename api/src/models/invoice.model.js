@@ -2,6 +2,9 @@ const mongoose = require('mongoose');
 const { toJSON, paginate } = require('./plugins');
 const mongoosePaginate = require('mongoose-paginate-v2');
 
+
+
+
 const invoiceSchema = mongoose.Schema({
     title: { type: String, required: false },
     address_line1: { type: String, required: false },
@@ -22,6 +25,7 @@ const invoiceSchema = mongoose.Schema({
      amount: { type: String, required: false } },
     amountDue: { type: String, required: false },
     sn_sln: { type: String, required: false },
+    metaData: { type: Object, required: false },
 });
 
 
