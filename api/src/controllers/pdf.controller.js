@@ -47,23 +47,28 @@ const parseInvoicePDF = catchAsync(async (req, res) => {
   const pdfText = await extractTextFromPDF(req.file.path);
   const data = parseInvoiceText(pdfText);
 
-  //save data to database
-  const result = await Invoice.create(data);
-
+  
   //save pdf file to s3
   const file = {
-    originalname: `INVOICE_${data.invoice}_${result._id}.pdf`,
+    originalname: `INVOICE_${data.invoice}.pdf`,
     mimetype: 'application/pdf',
     path: req.file.path,
   };
   const orgName = req.loggerInfo?.user.orgName?? 'default_org';
-  const fileMetadata = await uploadFile(file, orgName);
-  console.log(fileMetadata);
+  const fileMetaData = await uploadFile(file, orgName);
+  console.log(fileMetaData);
+
+  data.metaData = fileMetaData;
+  
+  //save data to database
+  const result = await Invoice.create(data);
+
+
 
   //delete the file
   fs.unlinkSync(req.file.path);
 
-  res.json({data, fileMetadata});
+  res.json({data, fileMetadata: fileMetaData});
 
 })
 
