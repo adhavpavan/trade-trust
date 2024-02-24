@@ -151,7 +151,7 @@ const getLots = catchAsync(async (req, res) => {
   const { limit, offset } = getPagination(page, size);
 
   let filter = {
-    parentId: parseInt(req.loggerInfo.user.orgId),
+    exporterId: parseInt(req.loggerInfo.user.orgId),
   };
   console.log('------orgid is---', filter);
 
@@ -159,8 +159,7 @@ const getLots = catchAsync(async (req, res) => {
   console.log('---optipns is---', options);
 
   const result = await lotService.queryLots(
-    filter,
-  );
+     filter, options);
   res.status(httpStatus.OK).send(getSuccessResponse(httpStatus.OK, 'Lots fetched successfully', result));
 });
 

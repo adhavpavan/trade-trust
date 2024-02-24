@@ -23,7 +23,7 @@ const getOrganizations = catchAsync(async (req, res) => {
   console.log('---optipns is---', options);
 
   const result = await organizationService.queryOrganizations(
-    filter,
+    filter, options
      );
   res.status(httpStatus.OK).send(getSuccessResponse(httpStatus.OK, 'Organizations fetched successfully', result));
 });
