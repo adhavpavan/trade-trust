@@ -6,14 +6,14 @@ const Lot = require('../models/lot.model.js');
 
 /**
  * Create an lot
- * @param {Object} orgBody
+ * @param {Object} lotBody
  * @returns {Promise<User>}
  */
-const createLot = async (orgBody) => {
+const createLot = async (lotBody) => {
   // if (await Lot.isEmailTaken(userBody.email)) {
   //   throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
   // }
-  return Lot.create(orgBody);
+  return Lot.create(lotBody);
 };
 
 /**

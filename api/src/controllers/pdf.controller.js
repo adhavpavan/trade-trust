@@ -1,3 +1,4 @@
+const { extractTextFromPDF, extractAddresses, extractOrderDetails, extractProductDetails, parseHouseBillText, parseInvoiceText } = require('../services/pdf.service');
 const catchAsync = require('../utils/catchAsync');
 const fs = require('fs');
 
