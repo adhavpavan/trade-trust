@@ -76,7 +76,7 @@ const registerUser = async (orgName, userName, department) => {
   const ccp = await getCCP(orgName);
   const caURL = await getCaUrl(orgName, ccp);
   const ca = new FabricCAServices(caURL);
-  const walletPath = await getWalletPath(orgName);
+  const walletPath = await getWalletPath('Identities/'+orgName);
 
   const wallet = await Wallets.newFileSystemWallet(walletPath);
   const userIdentity = await wallet.get(userName);

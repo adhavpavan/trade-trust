@@ -1,6 +1,6 @@
 'use strict';
 
-const agreement = require('./lib/agreement');
+const trust = require('./lib/trade-trust');
 
-module.exports.AssetTransfer = agreement;
-module.exports.contracts = [agreement];
+// module.exports.AssetTransfer = agreement;
+module.exports.contracts = [trust];
