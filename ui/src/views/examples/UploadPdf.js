@@ -1,208 +1,205 @@
-import React, { useState } from 'react';
-import Header from "../../components/Headers/Header";
-import PropTypes from 'prop-types';
+import React, { useState, useEffect } from 'react';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter, FormFeedback, Card, Form, FormGroup, Label, Input, Col, CustomInput } from 'reactstrap';
+import ProgressBar from './ProgressBar'
 import { useToasts } from 'react-toast-notifications'
-import {
-    Badge,
-    Card,
-    CardHeader,
-    Form,
-    Input,
-    FormGroup,
-    FormFeedback,
-    Label,
-    CardFooter,
-    DropdownMenu,
-    DropdownItem,
-    UncontrolledDropdown,
-    DropdownToggle,
-    Media,
-    Pagination,
-    PaginationItem,
-    PaginationLink,
-    Table,
-    Container,
-    Spinner,
-    Row,
-    UncontrolledTooltip,
-    Button,
-    Col,
-    CardBody,
-} from "reactstrap";
+import { getTimeStamp } from '../../helper/utils'
+import { useDispatch, useSelector } from 'react-redux';
 
+import * as Organization from '../../actions/organization'
+const UploadPDF = (props) => {
+    const {
+        className,
+        modal,
+        toggle,
+        isBill,
+        onNewClick,
+    } = props;
 
-const UploadPdfComponent = () => {
-    const [shipperId, setShipperId] = useState('')
-    const [bankId, setBankId] = useState('')
-    const [wholeSellerId, setWholeSellerId] = useState('')
-    const [lotNumber, setLotNumber] = useState('')
-    const [pdfFile, setPdfFile] = useState('')
-    const [isValidating, setIsValidating] = useState(false)
-    const [selectedFile, setSelectedFile] = useState(null);
     const { addToast } = useToasts();
+    const dispatch = useDispatch();
+    const isLoading = useSelector((state) => state.Organization.isLoading);
 
-    const handleFileChange = (event) => {
-        setSelectedFile(event.target.files[0]);
-        inputChangeHandler(event.target.value, 'pdfFile');
+    const decodedData = useSelector(
+        (state) => state?.User?.login?.decodedData
+    );
+
+    useEffect(() => {
+        console.log("-----------------qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq----------------------", decodedData)
+    }, [decodedData])
+
+
+    const [name, setName] = useState('')
+    const [bill, setBill] = useState('')
+    const [invoice, setInvoice] = useState('')
+    const [isValidating, setIsValidating] = useState(onNewClick)
+
+    const getFile = (e) => {
+        e.preventDefault();
+        let reader = new FileReader();
+        let file = e.target.files[0];
+        if (file) {
+            reader.readAsDataURL(file);
+            reader.onloadend = () => {
+                isBill ? setBill(file) : setInvoice(file);
+            };
+        }
     };
-    const validateAndAddOrg = () => {
+
+
+    const validateAndUploadBill = () => {
         let isInvalid = false
 
         setIsValidating(true)
 
-        if (shipperId == '') {
-            addToast(`Please enter shipper id`, {
+        if (name === '') {
+            addToast(`Please name`, {
                 appearance: 'error',
                 autoDismiss: true,
             })
             isInvalid = true
         }
-        if (bankId == '') {
-            addToast(`Please enter bank id`, {
+        if (isBill && bill === '') {
+            addToast(`Please upload bill`, {
                 appearance: 'error',
                 autoDismiss: true,
             })
             isInvalid = true
         }
-        if (wholeSellerId == '') {
-            addToast(`Please enter wholeSeller id`, {
+        if (!isBill && invoice === '') {
+            addToast(`Please upload invoice`, {
                 appearance: 'error',
                 autoDismiss: true,
             })
             isInvalid = true
         }
-        if (lotNumber == '') {
-            addToast(`Please enter lot number`, {
-                appearance: 'error',
-                autoDismiss: true,
-            })
-            isInvalid = true
-        }
-        if (pdfFile == '') {
-            addToast(`Please enter pdf file`, {
-                appearance: 'error',
-                autoDismiss: true,
-            })
-            isInvalid = true
-        }
-
+        console.log(isValidating);
         if (!isInvalid) {
-            handleUpload();
+            uploadBill();
         }
 
     }
-    const handleUpload = () => {
-        const formData = new FormData();
-        formData.append('file', selectedFile);
 
-        // axios.post('/upload', formData, {
-        //     headers: {
-        //         'Content-Type': 'multipart/form-data'
-        //     }
-        // }).then(response => {
-        //     console.log('File uploaded successfully');
-        // }).catch(error => {
-        //     console.error('Error uploading file:', error);
-        // });
+
+    const resetInput = () => {
+        setName('');
+        setBill('');
+        setInvoice('');
+        setIsValidating(false);
     };
+
+
+    const uploadBill = () => {
+        console.log("Here****************");
+
+        // const data = new FormData()
+        // data.append('name', orgName)
+
+
+        const data = {
+            name: name,
+            type: bill,
+            parentId: decodedData?.orgId,
+        }
+
+        dispatch(Organization.addORG(data)).then(() => {
+            addToast(`Organization created successfully`, {
+                appearance: 'success',
+                autoDismiss: true,
+            });
+            toggle();
+        }).catch((error) => {
+            alert(error)
+        }).finally(() => {
+            resetInput()
+            setIsValidating(false)
+        })
+    }
+
 
     const inputChangeHandler = (value, fieldName) => {
         switch (fieldName) {
-            case 'shipperId': setShipperId(value); break;
-            case 'bankId': setBankId(value); break;
-            case 'wholeSellerId': setWholeSellerId(value); break;
-            case 'lotNumber': setLotNumber(value); break;
-            case 'pdfFile': setPdfFile(value); break;
+            case 'name': setName(value); break;
+            case 'bill': setBill(value); break;
+            case 'invoice': setInvoice(value); break;
 
             default:
                 break;
         }
     }
+
     return (
         <div>
-            <Header />
-            <Container className="mt--7" fluid>
-                <Row>
-                    <div className="col">
-                        <Card className="shadow">
-                            <CardHeader className="border-0">
-                                <Col sm={9}>
-                                    <h3 className="mb-0">Upload PDF</h3>
-                                </Col>
-                            </CardHeader>
-                            <center>
+            <Modal isOpen={modal} toggle={toggle} className={className} size={'lg'}>
+                <ModalHeader toggle={toggle}>{isBill ? 'Upload Bill' : 'Upload Invoice'}</ModalHeader>
+                {isLoading ? <ProgressBar /> :
+                    (<>
 
-                            </center>
-                            <Card body>
+                        <Card className="bg-secondary  px-md-2">
+                            <ModalBody>
+                                <FormGroup row>
+                                    <Label sm={2}>Name</Label>
+                                    <Col sm={10}>
+                                        <Input type="text" invalid={isValidating && name == ''} onChange={e => { inputChangeHandler(e.target.value, 'name') }} placeholder="Enter name" />
+                                        <FormFeedback>*Required</FormFeedback>
+                                    </Col>
+                                </FormGroup>
                                 <Form>
-                                    <center>
-                                        <FormGroup col>
-                                            <Row>
-                                                <Col>
-                                                    <Label sm={16}>Shipper Id</Label>
-                                                    <Col sm={10}>
-                                                        <Input invalid={isValidating && shipperId == ''} onChange={e => { inputChangeHandler(e.target.value, 'shipperId') }} placeholder="Shipper Id" />
-                                                        <FormFeedback>*Required</FormFeedback>
-                                                    </Col>
-                                                </Col>
-                                                <Col>
-                                                    <Label sm={16}>Bank Id</Label>
-                                                    <Col sm={10}>
-                                                        <Input invalid={isValidating && bankId == ''} onChange={e => { inputChangeHandler(e.target.value, 'bankId') }} placeholder="Bank Id" />
-                                                        <FormFeedback>*Required</FormFeedback>
-                                                    </Col>
-                                                </Col>
-                                            </Row>
-                                            <br />
-                                            <Row>
-                                                <Col>
-                                                    <Label sm={16}>WholeSeller Id</Label>
-                                                    <Col sm={10}>
-                                                        <Input invalid={isValidating && wholeSellerId == ''} onChange={e => { inputChangeHandler(e.target.value, 'wholeSellerId') }} placeholder="WholeSeller Id" />
-                                                        <FormFeedback>*Required</FormFeedback>
-                                                    </Col>
-                                                </Col>
-                                                <Col>
-                                                    <Label sm={16}>Lot Number</Label>
-                                                    <Col sm={10}>
-                                                        <Input invalid={isValidating && lotNumber == ''} onChange={e => { inputChangeHandler(e.target.value, 'lotNumber') }} placeholder="Lot Number" />
-                                                        <FormFeedback>*Required</FormFeedback>
-                                                    </Col>
-                                                </Col>
-                                            </Row>
-                                            <br />
-                                            <br />
-                                            <Row>
-                                                <Col>
-                                                    {/* <Label sm={16}>Select PDF</Label> */}
-                                                    <Col sm={11}>
-                                                        <Input type='file' invalid={isValidating && pdfFile == ''} onChange={e => {
-                                                            e.preventDefault();
-                                                            handleFileChange(e);
-                                                        }} />
-                                                        <FormFeedback>*Required</FormFeedback>
-                                                    </Col>
-                                                    <Col sm={16}>
-                                                        <Button className="my-1" color="primary" onClick={() => { validateAndAddOrg() }} type="button">{"Upload"}</Button>
-                                                    </Col>
-                                                </Col>
-                                            </Row>
-                                        </FormGroup>
-                                    </center>
+                                    {/* <FormGroup> */}
+                                    {/* <Dropdown isOpen={dropdownOpen1} toggle={toggle1}>
+                  <DropdownToggle caret>
+                    {selectedOption || "Select an option"}
+                  </DropdownToggle>
+                  <DropdownMenu>
+                    <DropdownItem
+                      onClick={() => handleDropdownItemClick("Org 1")}
+                    >
+                      Org 1
+                    </DropdownItem>
+                    <DropdownItem
+                      onClick={() => handleDropdownItemClick("Org 2")}
+                    >
+                      Org 2
+                    </DropdownItem>
+                  </DropdownMenu>
+                </Dropdown>
+              </FormGroup> */}
 
+                                    <FormGroup row>
+                                            {
+                                                isBill ? <>
+                                                    <Label sm={2}>Bill</Label>
+                                                </> : <>
+                                                        <Label sm={2}>Invoice</Label>
+                                                </>
+                                            }
+                                        <Col sm={9}>
+                                            {
+                                                isBill ?
+                                                    <>
+                                                        <CustomInput invalid={isValidating && bill == ''} type="file" accept=".pdf, .PDF" onChange={e => { getFile(e) }} id="exampleCustomFileBrowser" name="customFile" />
+                                                    </> :
+                                                    <>
+                                                        <CustomInput invalid={isValidating && invoice == ''} type="file" accept=".pdf, .PDF" onChange={e => { getFile(e) }} id="exampleCustomFileBrowser" name="customFile" />
+                                                    </>
+                                            }
+                                            <FormFeedback>*Required</FormFeedback>
+                                        </Col>
+                                    </FormGroup>
                                 </Form>
-
-                            </Card>
+                            </ModalBody>
                         </Card>
-                    </div>
-                </Row>
-            </Container>
+
+                        <ModalFooter>
+                            <Button color="primary" onClick={() => { validateAndUploadBill() }}>Submit {isBill ? 'Bill' : 'Invoice'}</Button>{' '}
+                            <Button color="secondary" onClick={() => {
+                                resetInput();
+                                toggle();
+                            }}>Cancel</Button>
+                        </ModalFooter>
+                    </>)
+                }
+            </Modal>
         </div>
     );
-};
-
-UploadPdfComponent.propTypes = {
-
-};
-
-export default UploadPdfComponent;
+}
+export default UploadPDF;
