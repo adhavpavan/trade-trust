@@ -53,6 +53,7 @@
     "aws-sdk": "^2.1213.0",
     "bcryptjs": "^2.4.3",
     "compression": "^1.7.4",
+    "convert-csv-to-json": "^2.29.0",
     "cors": "^2.8.5",
     "cross-env": "^7.0.0",
     "dotenv": "^10.0.0",
@@ -83,7 +84,6 @@
     "validator": "^13.0.0",
     "winston": "^3.8.2",
     "winston-daily-rotate-file": "^4.7.1",
-    "xlsx": "^0.18.5",
     "xss-clean": "^0.1.1"
   },
   "devDependencies": {
