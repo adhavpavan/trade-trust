@@ -21,6 +21,7 @@ const lotSchema = mongoose.Schema({
     exporterId: { type: String, required: false },
     bankId: { type: String, required: false },
     wholeSellerId: { type: String, required: false },
+    transporterId: { type: String, required: false },
 
     //for internal use only
     docType: { type: String, required: false },
