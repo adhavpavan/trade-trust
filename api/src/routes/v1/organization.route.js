@@ -20,7 +20,11 @@ const router = express.Router();
 router
   .route('/')
   .post(adminAuth, validate(organizationValidation.createOrganization), organizationController.createOrganization)
-  .get(adminAuth, validate(organizationValidation.getOrganization), organizationController.getOrganizations);
+  .get(adminAuth, validate(organizationValidation.getOrganization), organizationController.getOrganizations)
+//add route for /search?name=
+router
+ .route('/search')
+.get( adminAuth,organizationController.getOrganizationsByName)
 
 module.exports = router;
 

@@ -36,9 +36,17 @@ const getOrganization = catchAsync(async (req, res) => {
   res.status(httpStatus.OK).send(getSuccessResponse(httpStatus.OK, 'Organization fetched successfully', user));
 });
 
+const getOrganizationsByName = catchAsync(async (req, res) => {
+  const user = await organizationService.getOrganizationsByName(req.query.name);
+  if (user.length === 0) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Organization not found');
+  }
+  res.status(httpStatus.OK).send(getSuccessResponse(httpStatus.OK, 'Organization fetched successfully', user));
+});
 
 module.exports = {
  createOrganization,
   getOrganizations,
   getOrganization,
+  getOrganizationsByName,
 };

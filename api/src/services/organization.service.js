@@ -38,10 +38,15 @@ const getOrganizationById = async (id) => {
   return Organization.findById(id);
 };
 
+const getOrganizationsByName = async (name) => {
+  // list of organizations by name contains the name
+  return Organization.find({ name: { $regex: name, $options: 'i' } });
+};
 
 
 module.exports = {
   createOrganization,
   queryOrganizations,
   getOrganizationById,
+  getOrganizationsByName,
 };
