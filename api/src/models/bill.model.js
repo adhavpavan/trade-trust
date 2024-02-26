@@ -39,7 +39,8 @@ const addressSchema = new mongoose.Schema({
     consignmentTotal: consignmentTotalSchema,
     numberOfOriginalBillsOfLanding: Number,
     signatoryCompany: String,
-    AuthorizedSignatory: String
+    AuthorizedSignatory: String,
+    metaData:  Object, 
   });
   
   

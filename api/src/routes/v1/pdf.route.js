@@ -28,6 +28,13 @@ router
       // adminAuth,
       upload.single('pdf'),
       pdfController.parseHouseBillPDF);
+
+router
+.route('/verify_eBill/:id')
+.post(
+  // adminAuth,
+  upload.single('pdf'),
+  pdfController.verifyEBill);
   
 
 module.exports = router;

@@ -64,7 +64,8 @@ const deliveryProofSchema = new mongoose.Schema({
     deliveryAddress: deliveryAddressSchema,
     orderDetails: orderDetailsSchema,
     productDetails: productDetailsSchema,
-    greenCode: String
+    greenCode: String,
+    metaData: Object
 });
 
 
