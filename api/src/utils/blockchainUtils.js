@@ -16,6 +16,7 @@ const config = require('../config/config');
 const catchAsync = require('./catchAsync');
 
 const getCCP = async (orgName) => {
+  orgName = 'org1'
   let ccpPath = path.resolve(__dirname, '..', '..', 'connection-profiles', `connection-${orgName}.json`);
   if (!ccpPath) {
     throw new ApiError(httpStatus.NOT_EXTENDED, 'Invalid connection profile');
@@ -25,6 +26,7 @@ const getCCP = async (orgName) => {
 };
 
 const getCaUrl = async (orgName, ccp) => {
+  orgName = 'org1'
   let caURL = ccp.certificateAuthorities[`ca.${orgName}.example.com`].url;
   if (!caURL) {
     throw new ApiError(httpStatus.NOT_EXTENDED, 'Invalid Certificate authority URL');
@@ -33,6 +35,7 @@ const getCaUrl = async (orgName, ccp) => {
 };
 
 const getCaInfo = async (orgName, ccp) => {
+  orgName= 'org1'
   let caInfo = ccp.certificateAuthorities[`ca.${orgName}.example.com`];
   if (!caInfo) {
     throw new ApiError(httpStatus.NOT_EXTENDED, 'Invalid Certificate authority info');
@@ -47,7 +50,7 @@ const getAffiliation = async (org) => {
 };
 
 const getWalletPath = async (orgName) => {
-  let walletPath = path.resolve(__dirname, '../..', `wallets/${orgName}`); //path.join(process.cwd(), `${orgName}-wallet`);
+  let walletPath = path.resolve(__dirname, '../..', `wallets/Identities/${orgName}`); //path.join(process.cwd(), `${orgName}-wallet`);
   if (!walletPath) {
     throw new ApiError(httpStatus.NOT_EXTENDED, 'Invalid Wallet Path');
   }
@@ -55,28 +58,33 @@ const getWalletPath = async (orgName) => {
 };
 
 const enrollAdmin = async (_ca, wallet, orgName, ccp) => {
-  const caInfo = await getCaInfo(orgName, ccp);
-  const caTLSCACerts = caInfo.tlsCACerts.pem;
-  const ca = new FabricCAServices(caInfo.url, { trustedRoots: caTLSCACerts, verify: false }, caInfo.caName);
-  const enrollment = await ca.enroll({ enrollmentID: config.caAdminId, enrollmentSecret: config.caAdminSecret });
-
-  let x509Identity = {
-    credentials: {
-      certificate: enrollment.certificate,
-      privateKey: enrollment.key.toBytes(),
-    },
-    mspId: `${orgName}MSP`,
-    type: 'X.509',
-  };
-  await wallet.put(config.caAdminId, x509Identity);
-  return true;
+  try {
+    const caInfo = await getCaInfo(orgName, ccp);
+    const caTLSCACerts = caInfo.tlsCACerts.pem;
+    const ca = new FabricCAServices(caInfo.url, { trustedRoots: caTLSCACerts, verify: false }, caInfo.caName);
+    const enrollment = await ca.enroll({ enrollmentID: config.caAdminId, enrollmentSecret: config.caAdminSecret });
+  
+    let x509Identity = {
+      credentials: {
+        certificate: enrollment.certificate,
+        privateKey: enrollment.key.toBytes(),
+      },
+      mspId: `${orgName}MSP`,
+      type: 'X.509',
+    };
+    await wallet.put(config.caAdminId, x509Identity);
+    return true;
+  } catch (error) {
+    console.log("-----------------------------", error)
+  }
+ 
 };
 
 const registerUser = async (orgName, userName, department) => {
-  const ccp = await getCCP(orgName);
-  const caURL = await getCaUrl(orgName, ccp);
+  const ccp = await getCCP('org1');
+  const caURL = await getCaUrl('org1', ccp);
   const ca = new FabricCAServices(caURL);
-  const walletPath = await getWalletPath('Identities/'+orgName);
+  const walletPath = await getWalletPath(orgName);
 
   const wallet = await Wallets.newFileSystemWallet(walletPath);
   const userIdentity = await wallet.get(userName);

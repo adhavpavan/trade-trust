@@ -6,45 +6,57 @@ const { registerUser } = require('./blockchainUtils');
 
 const ingestBootstrapData = async () => {
   const staticOrgData = [
-    { name: "DPT", id: 1, parentId: 1 },
+    { name: 'DTP', id: 1, parentId: 1 },
     { name: 'Exporter 1', id: 2, parentId: 1 },
     { name: 'Bank', id: 3, parentId: 1 },
     { name: 'Transporter', id: 4, parentId: 1 },
     { name: 'Wholeseller', id: 5, parentId: 1 },
-
   ];
   const staticUser = [
     {
       name: 'user 1',
-      email: 'admin310@gmail.com',
+      email: 'admin911@gmail.com',
       orgId: 1,
-      bcOrg: 1,
-      password: config.commonPassword,
+      bcOrg:1,
+      password: config.commonPassword, 
       department: ORG_DEPARTMENT.LEGAL,
+      type:USER_TYPE.SUPER_ADMIN,
+    },
+    {
+      name: 'user 1',
+      email: 'admin900@gmail.com',
+      orgId: 2,
+      bcOrg:1,
+      password: config.commonPassword, 
+      department: ORG_DEPARTMENT.LEGAL,
+      type:USER_TYPE.SUPER_ADMIN,
     },
     {
       name: 'User 2',
-      email: 'admin311@gmail.com',
-      orgId: 2,
-      bcOrg: 1,
-      password: config.commonPassword,
+      email: 'admin901@gmail.com',
+      orgId: 3,
+      bcOrg:1,
+      password: config.commonPassword, 
       department: ORG_DEPARTMENT.LEGAL,
+      type:USER_TYPE.ADMIN,
     },
     {
       name: 'User 3',
-      email: 'admin312@gmail.com',
-      orgId: 3,
-      bcOrg: 1,
-      password: config.commonPassword,
+      email: 'admin902@gmail.com',
+      orgId: 4,
+      bcOrg:1,
+      password: config.commonPassword, 
       department: ORG_DEPARTMENT.LEGAL,
+      type:USER_TYPE.ADMIN,
     },
     {
       name: 'User 4',
-      email: 'admin313@gmail.com',
-      orgId: 4,
-      bcOrg: 1,
-      password: config.commonPassword,
+      email: 'admin903@gmail.com',
+      orgId: 5,
+      bcOrg:1,
+      password: config.commonPassword, 
       department: ORG_DEPARTMENT.LEGAL,
+      type:USER_TYPE.ADMIN,
     },
   ];
   //org data
@@ -74,7 +86,7 @@ const ingestBootstrapData = async () => {
         orgId: user.orgId,
         password: user.password,
         status: USER_STATUS.ACTIVE,
-        type: USER_TYPE.ADMIN,
+        
         department: user.department,
       });
       try {
