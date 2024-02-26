@@ -3,6 +3,8 @@ const catchAsync = require('../utils/catchAsync');
 const fs = require('fs');
 const { uploadFile } = require('../utils/fileUpload');
 const { DeliveryProof , Invoice, Bill} = require('../models');
+const { getSuccessResponse } = require('../utils/Response');
+const httpStatus = require('http-status');
 
 
 const parseDeliveryProofPDF = catchAsync(async (req, res) => {
@@ -22,11 +24,9 @@ const parseDeliveryProofPDF = catchAsync(async (req, res) => {
     greenCode,
   };
 
-  //save data to database
-  const result = await DeliveryProof.create(data);
   //save pdf file to s3
   const file = {
-    originalname: `DELIVERY_PROOF_${data.orderDetails.OrderId}_${result._id}.pdf`,
+    originalname: `DELIVERY_PROOF_${data.orderDetails.OrderId}.pdf`,
     mimetype: 'application/pdf',
     path: req.file.path,
   };
@@ -34,12 +34,22 @@ const parseDeliveryProofPDF = catchAsync(async (req, res) => {
   const fileMetadata = await uploadFile(file, orgName);
   console.log(fileMetadata);
 
+  data.metaData = fileMetadata;
+  
+  //save data to database
+  const result = await DeliveryProof.create(data);
 
 
   // delete the file
   fs.unlinkSync(req.file.path);
 
-  res.json({data, fileMetadata});
+  // res.json({data, fileMetadata});
+  // const response = {
+  //   data: result,
+  //   // fileMetadata,
+  // };
+  res.status(httpStatus.CREATED).send(getSuccessResponse(httpStatus.CREATED, 'Delivery Proof uploaded successfully', result));
+
 });
 
 const parseInvoicePDF = catchAsync(async (req, res) => {
@@ -68,7 +78,8 @@ const parseInvoicePDF = catchAsync(async (req, res) => {
   //delete the file
   fs.unlinkSync(req.file.path);
 
-  res.json({data, fileMetadata: fileMetaData});
+  // res.json({data, fileMetadata: fileMetaData});
+  res.status(httpStatus.CREATED).send(getSuccessResponse(httpStatus.CREATED, 'Invoice uploaded successfully', result));
 
 })
 
@@ -76,11 +87,9 @@ const parseHouseBillPDF = catchAsync(async (req, res) => {
   const pdfText = await extractTextFromPDF(req.file.path);
   const data = parseHouseBillText(pdfText);
 
-  //save data to database
-  const result = await Bill.create(data);
   //save pdf file to s3
   const file = {
-    originalname: `HOUSE_BILL_${data.shipperReference}_${result._id}.pdf`,
+    originalname: `HOUSE_BILL_${data.shipperReference}.pdf`,
     mimetype: 'application/pdf',
     path: req.file.path,
   };
@@ -88,10 +97,15 @@ const parseHouseBillPDF = catchAsync(async (req, res) => {
   const fileMetadata = await uploadFile(file, orgName);
   console.log(fileMetadata);
 
+  data.metaData = fileMetadata;
+  
+  //save data to database
+  const result = await Bill.create(data);
 
   //delete the file
   fs.unlinkSync(req.file.path);
-  res.json({data, fileMetadata});
+  // res.json({data, fileMetadata});
+  res.status(httpStatus.CREATED).send(getSuccessResponse(httpStatus.CREATED, 'Bill uploaded successfully', result));
 })
 
 
