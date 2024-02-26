@@ -3,7 +3,7 @@
 const { Contract, Transaction } = require("fabric-contract-api");
 const ClientIdentity = require('fabric-shim').ClientIdentity;
 
-class Agreement extends Contract {
+class Trust extends Contract {
   // createAsset issues a new asset to the world state with given details.
 
   async CreateContract(ctx, agreementData) {
@@ -21,34 +21,6 @@ class Agreement extends Contract {
     try {
       let parsedData = JSON.parse(data)
       await ctx.stub.putState(parsedData.id, data);
-      // ctx.stub.SetEvent("CreateAsset", agreementData)
-      return ctx.stub.getTxID();
-    } catch (err) {
-      throw new Error(err.stack);
-    }    
-  }
-
-  
-  async ABACTest(ctx, data) {
-    try {
-      let cid = new ClientIdentity(ctx.stub)
-      // let d = cid.assertAttributeValue('hf.role', 'auditor')
-      // assertAttributeValue(attrName: string, attrValue: string): boolean;
-      //   getAttributeValue(attrName: string): string | null;
-      //   getID(): string;
-      //   getIDBytes(): Uint8Array;
-      //   getMSPID(): string;
-
-      console.log("Attribute value", cid.getAttributeValue('role'))
-      console.log("Attribute value", cid.getID())
-      console.log("Attribute value", cid.getIDBytes())
-      console.log("Attribute value", cid.getMSPID())
-
-      if(!cid.assertAttributeValue('department', 'financial')){
-        throw new Error('You are not authorized to perform this operation, Only financial department user can do this operation')
-      }
-      let agreement = JSON.parse(data)
-      await ctx.stub.putState(agreement.id, data);
       return ctx.stub.getTxID();
     } catch (err) {
       throw new Error(err.stack);
@@ -80,26 +52,6 @@ class Agreement extends Contract {
       return assetJSON.toString();
     } catch (err) {
       throw new Error(err.stack);
-    }
-  }
-
-  // createBulkAssets with given data
-  async createBulkAssets(ctx, data) {
-    try {
-      const assets = JSON.parse(data);
-      console.log(assets);
-
-      for (let count = 0; count < assets.length; count++) {
-        console.log(assets[count]);
-        await ctx.stub.putState(
-          assets[count].id,
-          Buffer.from(JSON.stringify(assets[count].value))
-        );
-      }
-
-      return ctx.stub.getTxID();
-    } catch (err) {
-      return new Error(err.message);
     }
   }
 
@@ -290,4 +242,4 @@ class Agreement extends Contract {
   }
 }
 
-module.exports = Agreement;
+module.exports = Trust;

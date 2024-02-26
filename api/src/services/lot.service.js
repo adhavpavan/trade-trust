@@ -2,22 +2,22 @@ const httpStatus = require('http-status');
 const { User } = require('../models');
 const ApiError = require('../utils/ApiError');
 const { registerUser } = require('../utils/blockchainUtils');
-const Organization = require('../models/organization.model');
+const Lot = require('../models/lot.model.js');
 
 /**
- * Create an organization
- * @param {Object} orgBody
+ * Create an lot
+ * @param {Object} lotBody
  * @returns {Promise<User>}
  */
-const createOrganization = async (orgBody) => {
-  // if (await Organization.isEmailTaken(userBody.email)) {
+const createLot = async (lotBody) => {
+  // if (await Lot.isEmailTaken(userBody.email)) {
   //   throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
   // }
-  return Organization.create(orgBody);
+  return Lot.create(lotBody);
 };
 
 /**
- * Query for organizations
+ * Query for lots
  * @param {Object} filter - Mongo filter
  * @param {Object} options - Query options
  * @param {string} [options.sortBy] - Sort option in the format: sortField:(desc|asc)
@@ -25,23 +25,23 @@ const createOrganization = async (orgBody) => {
  * @param {number} [options.page] - Current page (default = 1)
  * @returns {Promise<QueryResult>}
  */
-const queryOrganizations = async (filter, options) => {
-  return Organization.paginate(filter, options);
+const queryLots = async (filter, options) => {
+  return Lot.paginate(filter, options);
 };
 
 /**
- * Get organization by id
+ * Get lot by id
  * @param {ObjectId} id
- * @returns {Promise<Organization>}
+ * @returns {Promise<Lot>}
  */
-const getOrganizationById = async (id) => {
-  return Organization.findById(id);
+const getLotById = async (id) => {
+  return Lot.findById(id);
 };
 
 
 
 module.exports = {
-  createOrganization,
-  queryOrganizations,
-  getOrganizationById,
+  createLot,
+  queryLots,
+  getLotById,
 };
