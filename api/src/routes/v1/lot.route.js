@@ -25,13 +25,13 @@ const upload = multer({ dest: 'uploads/' });
 router
   .route('/')
   .post(
-    // adminAuth,
+    auth,
     //  validate(lotValidation.createLot), 
     upload.single('xls'),
     lotController.createLot)
 
   .get(
-    // adminAuth, 
+    auth, 
     validate(lotValidation.getLot), lotController.getLots);
 
 module.exports = router;
