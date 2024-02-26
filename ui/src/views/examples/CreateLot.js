@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import Header from "../../components/Headers/Header";
 import { useToasts } from 'react-toast-notifications';
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import * as OrgActions from "../../actions/organization";
+import * as Lot from "../../actions/lot";
 import {
     Card,
     CardHeader,
@@ -40,12 +41,17 @@ const CreateLot = () => {
     const [unitOfMeasure, setUnitOfMeasure] = useState('')
     const [csvFile, setCSV] = useState('')
     const [isValidating, setIsValidating] = useState(false)
-    const [selectedFile, setSelectedFile] = useState(null);
+    // const [selectedFile, setSelectedFile] = useState(null);
     const { addToast } = useToasts();
-    const [orgListData, setOrgListData] = useState([]);
+    // const orgListData = useSelector((state) => state.Organization.orgList.docs);
+
+    const orgList = useSelector((state) => state.Organization.orgList.docs);
     const [orgSelected, setOrgSelected] = useState('');
     const [paginationData, setPaginationData] = useState({ selectedPage: 0 });
     const dispatch = useDispatch();
+    const userProfileData = useSelector(
+        (state) => state?.User?.login?.decodedData
+    );
 
     const [dropdownOpen, setDropdownOpen] = useState(false);
     // const [items, setItems] = useState([]);
@@ -63,27 +69,27 @@ const CreateLot = () => {
     // }, []);
 
 
-    useEffect(() => {
-        console.log(`-------------------------------`);
+    // useEffect(() => {
+    //     console.log(`-------------------------------`);
 
-        const fetchData = async () => {
-            try {
-                // const response = 
-                var response = await dispatch(OrgActions.getORGList({
-                    page: paginationData.selectedPage,
-                    size: 10,
-                }));
-                console.log("response from org list", response);
-                setOrgListData(response);
-                // Update state with fetched data
-            } catch (error) {
-                console.error('Error fetching organization data:', error);
-            }
-        };
+    //     const fetchData = async () => {
+    //         try {
+    //             // const response = 
+    //             var response = await dispatch(OrgActions.getORGList({
+    //                 page: 0,
+    //                 size: 10,
+    //             }));
+    //             console.log("response from org list", response);
+    //             // setOrgListData(response);
+    //             // Update state with fetched data
+    //         } catch (error) {
+    //             console.error('Error fetching organization data:', error);
+    //         }
+    //     };
 
-        fetchData(); // Fetch data when component mounts
+    //     fetchData(); // Fetch data when component mounts
 
-    }, []);
+    // }, []);
 
     const toggleDropdown = () => {
         setDropdownOpen(prevState => !prevState);
@@ -101,18 +107,18 @@ const CreateLot = () => {
     };
 
 
-    useEffect(() => {
-        console.log("pagination data changed", paginationData);
+    // useEffect(() => {
+    //     console.log("pagination data changed", paginationData);
 
-        dispatch(OrgActions.getORGList({
-            page: paginationData.selectedPage,
-            size: 10,
-        }));
-    }, [paginationData]);
-    const handleFileChange = (event) => {
-        setSelectedFile(event.target.files[0]);
-        inputChangeHandler(event.target.value, 'csvFile');
-    };
+    //     dispatch(OrgActions.getORGList({
+    //         page: 0,
+    //         size: 10,
+    //     }));
+    // }, [paginationData]);
+    // const handleFileChange = (event) => {
+    //     setSelectedFile(event.target.files[0]);
+    //     inputChangeHandler(event.target.value, 'csvFile');
+    // };
     const validateAndAddOrg = () => {
         let isInvalid = false
         setIsValidating(true)
@@ -154,6 +160,7 @@ const CreateLot = () => {
         }
 
         if (!isInvalid) {
+            console.log("0000000000000011111111111111111111");
             handleUpload();
         }
     }
@@ -207,10 +214,13 @@ const CreateLot = () => {
     const createLot = () => {
 
     }
-    
+
     const handleUpload = () => {
+        Lot.startLoading();
         const formData = new FormData();
-        // formData.append('file', selectedFile);
+        formData.append('xls', csvFile);
+        formData.append('data', { "bankerId": bankId, "wholesellerid": wholeSellerId, "transporterId": userProfileData?.orgId });
+
 
         // axios.post('/upload', formData, {
         //     headers: {
@@ -221,6 +231,21 @@ const CreateLot = () => {
         // }).catch(error => {
         //     console.error('Error uploading file:', error);
         // });
+
+        dispatch(Lot.uplodCSV(formData)).then(() => {
+            addToast(`CSV uploaded successfully`, {
+                appearance: 'success',
+                autoDismiss: true,
+            });
+            // toggle();
+        }).catch((error) => {
+            alert(error)
+        }).finally(() => {
+
+            // resetInput()
+            setIsValidating(false);
+        })
+        Lot.endLoading();
     };
 
     const inputChangeHandler = (value, fieldName) => {
@@ -254,63 +279,63 @@ const CreateLot = () => {
                                 </Col>
                             </CardHeader>
                             <Card body>
-                                {orgListData.length !== 0 ? <>
-                                    <Form>
-                                        <Col>
-                                            <FormGroup row>
-                                                {/* <Row> */}
-                                                {/* <Col> */}
-                                                <Label sm={2}>Shipper Id</Label>
-                                                <Col sm={10}>
-                                                    <Input invalid={isValidating && shipperId === ''} onChange={e => { inputChangeHandler(e.target.value, 'shipperId') }} placeholder="Shipper Id" />
-                                                    <FormFeedback>*Required</FormFeedback>
-                                                </Col>
-                                                {/* </Col> */}
-                                                {/* </Row> */}
-                                            </FormGroup>
+                                {/* {orgList.length !== 0 ? <> */}
+                                <Form>
+                                    <Col>
+                                        <FormGroup row>
+                                            {/* <Row> */}
+                                            {/* <Col> */}
+                                            <Label sm={2}>Shipper Id</Label>
+                                            <Col sm={10}>
+                                                <Input invalid={isValidating && shipperId === ''} onChange={e => { inputChangeHandler(e.target.value, 'shipperId') }} placeholder="Shipper Id" />
+                                                <FormFeedback>*Required</FormFeedback>
+                                            </Col>
+                                            {/* </Col> */}
+                                            {/* </Row> */}
+                                        </FormGroup>
 
-                                            <FormGroup row>
+                                        <FormGroup row>
 
-                                                {/* <Col> */}
-                                                <Label sm={2}>Bank Id</Label>
-                                                <Col sm={10}>
-                                                    <Input invalid={isValidating && bankId === ''} onChange={e => { inputChangeHandler(e.target.value, 'bankId') }} placeholder="Bank Id" />
-                                                    <FormFeedback>*Required</FormFeedback>
-                                                </Col>
-                                                {/* </Col> */}
-                                            </FormGroup>
-                                            <FormGroup row>
-                                                <Label sm={2} >WholeSeller Id</Label>
-                                                <Col sm={10}>
-                                                    <Input invalid={isValidating && wholeSellerId === ''} onChange={e => { inputChangeHandler(e.target.value, 'wholeSellerId') }} placeholder="WholeSeller Id" />
-                                                    <FormFeedback>*Required</FormFeedback>
-                                                </Col>
-                                            </FormGroup>
+                                            {/* <Col> */}
+                                            <Label sm={2}>Bank Id</Label>
+                                            <Col sm={10}>
+                                                <Input invalid={isValidating && bankId === ''} onChange={e => { inputChangeHandler(e.target.value, 'bankId') }} placeholder="Bank Id" />
+                                                <FormFeedback>*Required</FormFeedback>
+                                            </Col>
+                                            {/* </Col> */}
+                                        </FormGroup>
+                                        <FormGroup row>
+                                            <Label sm={2} >WholeSeller Id</Label>
+                                            <Col sm={10}>
+                                                <Input invalid={isValidating && wholeSellerId === ''} onChange={e => { inputChangeHandler(e.target.value, 'wholeSellerId') }} placeholder="WholeSeller Id" />
+                                                <FormFeedback>*Required</FormFeedback>
+                                            </Col>
+                                        </FormGroup>
 
-                                            <FormGroup row>
-                                                <Label sm={2} >Lot Number</Label>
-                                                <Col sm={10}>
-                                                    <Input invalid={isValidating && lotNumber === ''} onChange={e => { inputChangeHandler(e.target.value, 'lotNumber') }} placeholder="Lot Number" />
-                                                    <FormFeedback>*Required</FormFeedback>
-                                                </Col>
-                                            </FormGroup>
-                                            <FormGroup row>
+                                        <FormGroup row>
+                                            <Label sm={2} >Lot Number</Label>
+                                            <Col sm={10}>
+                                                <Input invalid={isValidating && lotNumber === ''} onChange={e => { inputChangeHandler(e.target.value, 'lotNumber') }} placeholder="Lot Number" />
+                                                <FormFeedback>*Required</FormFeedback>
+                                            </Col>
+                                        </FormGroup>
+                                        <FormGroup row>
 
-                                                <Label sm={2}>Select Excel</Label>
-                                                <Col sm={10}>
+                                            <Label sm={2}>Select Excel</Label>
+                                            <Col sm={10}>
 
-                                                    <CustomInput placeholder='Choose CSV' invalid={isValidating && csvFile == ''} type="file" accept=".csv, .xlsm, .xlsx, .xlsm" onChange={e => { getFile(e) }} id="exampleCustomFileBrowser" name="customFile" />
-                                                    {/* <Input type='file' name='file' id='fileid' accept=".xlsm, .xls, .xlsx" invalid={isValidating && csvFile === ''} onChange={e => {
+                                                <CustomInput placeholder='Choose CSV' invalid={isValidating && csvFile === ''} type="file" accept=".csv, .xlsm, .xlsx, .xlsm" onChange={e => { getFile(e) }} id="exampleCustomFileBrowser" name="customFile" />
+                                                {/* <Input type='file' name='file' id='fileid' accept=".xlsm, .xls, .xlsx" invalid={isValidating && csvFile === ''} onChange={e => {
                                                                     e.preventDefault();
                                                                     handleFileChange(e);
                                                                 }} > */}
-                                                    {/* </Input> */}
-                                                    <FormFeedback>*Required</FormFeedback>
-                                                </Col>
+                                                {/* </Input> */}
+                                                <FormFeedback>*Required</FormFeedback>
+                                            </Col>
 
-                                            </FormGroup>
+                                        </FormGroup>
 
-                                            <FormGroup row>
+                                        {/* <FormGroup row>
                                                 <Label sm={2}>Organization Name</Label>
                                                 <Col sm={10}>
                                                     <Dropdown isOpen={dropdownOpen} toggle={toggleDropdown}>
@@ -318,115 +343,115 @@ const CreateLot = () => {
                                                             {orgSelected === '' ? 'Select Item' : orgSelected}
                                                         </DropdownToggle>
                                                         <DropdownMenu>
-                                                            {orgListData.map(item => (
+                                                            {orgList.map(item => (
                                                                 <DropdownItem key={item.id} onClick={() => handleItemClick(item)}>
-                                                                    {item.name} {/* Assuming each item has a 'name' property */}
+                                                                    {item.name} 
                                                                 </DropdownItem>
                                                             ))}
                                                         </DropdownMenu>
                                                     </Dropdown>
                                                 </Col>
-                                            </FormGroup>
-                                            {csvFile !== '' ? <>                                            <FormGroup row>
+                                            </FormGroup> */}
+                                        {/* {csvFile !== '' ? <> */}
+                                            {/* <FormGroup row>
 
+                                            <Label sm={2} >Vendor</Label>
+                                            <Col sm={10}>
+                                                <Input invalid={isValidating && vendor === ''} onChange={e => { inputChangeHandler(e.target.value, 'vendor') }} placeholder="Vandor" />
+                                                <FormFeedback>*Required</FormFeedback>
+                                            </Col>
+                                        </FormGroup>
+                                            <FormGroup row>
 
-
-
-                                                <Label sm={2} >Vendor</Label>
+                                                <Label sm={2} >Deadline</Label>
                                                 <Col sm={10}>
-                                                    <Input invalid={isValidating && vendor === ''} onChange={e => { inputChangeHandler(e.target.value, 'vendor') }} placeholder="Vandor" />
+                                                    <Input invalid={isValidating && deadline === ''} onChange={e => { inputChangeHandler(e.target.value, 'deadline') }} placeholder="Deadline" />
+                                                    <FormFeedback>*Required</FormFeedback>
+                                                </Col>
+
+                                            </FormGroup>
+                                            <FormGroup row>
+                                                <Label sm={2} >Ordering Date</Label>
+                                                <Col sm={10}>
+                                                    <Input invalid={isValidating && orderingDate === ''} onChange={e => { inputChangeHandler(e.target.value, 'orderingDate') }} placeholder="Ordering Date" />
                                                     <FormFeedback>*Required</FormFeedback>
                                                 </Col>
                                             </FormGroup>
-                                                <FormGroup row>
+                                            <FormGroup row>
 
-                                                    <Label sm={2} >Deadline</Label>
-                                                    <Col sm={10}>
-                                                        <Input invalid={isValidating && deadline === ''} onChange={e => { inputChangeHandler(e.target.value, 'deadline') }} placeholder="Deadline" />
-                                                        <FormFeedback>*Required</FormFeedback>
-                                                    </Col>
+                                                <Label sm={2} >Agreement Type</Label>
+                                                <Col sm={10}>
+                                                    <Input invalid={isValidating && agreementType === ''} onChange={e => { inputChangeHandler(e.target.value, 'agreementType') }} placeholder="Agreement Type" />
+                                                    <FormFeedback>*Required</FormFeedback>
+                                                </Col>
+                                            </FormGroup>
+                                            <FormGroup row>
 
-                                                </FormGroup>
-                                                <FormGroup row>
-                                                    <Label sm={2} >Ordering Date</Label>
-                                                    <Col sm={10}>
-                                                        <Input invalid={isValidating && orderingDate === ''} onChange={e => { inputChangeHandler(e.target.value, 'orderingDate') }} placeholder="Ordering Date" />
-                                                        <FormFeedback>*Required</FormFeedback>
-                                                    </Col>
-                                                </FormGroup>
-                                                <FormGroup row>
+                                                <Label sm={2} >Product</Label>
+                                                <Col sm={10}>
+                                                    <Input invalid={isValidating && product === ''} onChange={e => { inputChangeHandler(e.target.value, 'product') }} placeholder="Product" />
+                                                    <FormFeedback>*Required</FormFeedback>
+                                                </Col>
+                                            </FormGroup>
+                                            <FormGroup row>
+                                                <Label sm={2} >Quantity</Label>
+                                                <Col sm={10}>
+                                                    <Input invalid={isValidating && qty === ''} onChange={e => { inputChangeHandler(e.target.value, 'qty') }} placeholder="Quantity" />
+                                                    <FormFeedback>*Required</FormFeedback>
+                                                </Col>
+                                            </FormGroup>
+                                            <FormGroup row>
 
-                                                    <Label sm={2} >Agreement Type</Label>
-                                                    <Col sm={10}>
-                                                        <Input invalid={isValidating && agreementType === ''} onChange={e => { inputChangeHandler(e.target.value, 'agreementType') }} placeholder="Agreement Type" />
-                                                        <FormFeedback>*Required</FormFeedback>
-                                                    </Col>
-                                                </FormGroup>
-                                                <FormGroup row>
+                                                <Label sm={2} >Price</Label>
+                                                <Col sm={10}>
+                                                    <Input invalid={isValidating && price === ''} onChange={e => { inputChangeHandler(e.target.value, 'price') }} placeholder="Price" />
+                                                    <FormFeedback>*Required</FormFeedback>
+                                                </Col>
+                                            </FormGroup>
 
-                                                    <Label sm={2} >Product</Label>
-                                                    <Col sm={10}>
-                                                        <Input invalid={isValidating && product === ''} onChange={e => { inputChangeHandler(e.target.value, 'product') }} placeholder="Product" />
-                                                        <FormFeedback>*Required</FormFeedback>
-                                                    </Col>
-                                                </FormGroup>
-                                                <FormGroup row>
-                                                    <Label sm={2} >Quantity</Label>
-                                                    <Col sm={10}>
-                                                        <Input invalid={isValidating && qty === ''} onChange={e => { inputChangeHandler(e.target.value, 'qty') }} placeholder="Quantity" />
-                                                        <FormFeedback>*Required</FormFeedback>
-                                                    </Col>
-                                                </FormGroup>
-                                                <FormGroup row>
+                                            <FormGroup row>
+                                                <Label sm={2} >Confirm Quantity</Label>
+                                                <Col sm={10}>
+                                                    <Input invalid={isValidating && confirmQty === ''} onChange={e => { inputChangeHandler(e.target.value, 'confirmQty') }} placeholder="Confirm Quantity" />
+                                                    <FormFeedback>*Required</FormFeedback>
 
-                                                    <Label sm={2} >Price</Label>
-                                                    <Col sm={10}>
-                                                        <Input invalid={isValidating && price === ''} onChange={e => { inputChangeHandler(e.target.value, 'price') }} placeholder="Price" />
-                                                        <FormFeedback>*Required</FormFeedback>
-                                                    </Col>
-                                                </FormGroup>
+                                                </Col>
+                                            </FormGroup>
+                                            <FormGroup row>
 
-                                                <FormGroup row>
-                                                    <Label sm={2} >Confirm Quantity</Label>
-                                                    <Col sm={10}>
-                                                        <Input invalid={isValidating && confirmQty === ''} onChange={e => { inputChangeHandler(e.target.value, 'confirmQty') }} placeholder="Confirm Quantity" />
-                                                        <FormFeedback>*Required</FormFeedback>
+                                                <Label sm={2} >Tax</Label>
+                                                <Col sm={10}>
+                                                    <Input invalid={isValidating && tax === ''} onChange={e => { inputChangeHandler(e.target.value, 'tax') }} placeholder="Tax" />
+                                                    <FormFeedback>*Required</FormFeedback>
+                                                </Col>
+                                            </FormGroup>
 
-                                                    </Col>
-                                                </FormGroup>
-                                                <FormGroup row>
+                                            <FormGroup row>
+                                                <Label sm={2} >Unit Of Measure</Label>
+                                                <Col sm={10}>
+                                                    <Input invalid={isValidating && unitOfMeasure === ''} onChange={e => { inputChangeHandler(e.target.value, 'unitOfMeasure') }} placeholder="Unit Of Measure" />
+                                                    <FormFeedback>*Required</FormFeedback>
+                                                </Col>
 
-                                                    <Label sm={2} >Tax</Label>
-                                                    <Col sm={10}>
-                                                        <Input invalid={isValidating && tax === ''} onChange={e => { inputChangeHandler(e.target.value, 'tax') }} placeholder="Tax" />
-                                                        <FormFeedback>*Required</FormFeedback>
-                                                    </Col>
-                                                </FormGroup>
+                                            </FormGroup>
+                                            <FormGroup row>
+                                                <Col sm={10}>
+                                                    <Button className="my-1" color="primary" onClick={() => { validateAndCreateLot() }} type="button">{"Create Lot"}</Button>
+                                                </Col>
 
-                                                <FormGroup row>
-                                                    <Label sm={2} >Unit Of Measure</Label>
-                                                    <Col sm={10}>
-                                                        <Input invalid={isValidating && unitOfMeasure === ''} onChange={e => { inputChangeHandler(e.target.value, 'unitOfMeasure') }} placeholder="Unit Of Measure" />
-                                                        <FormFeedback>*Required</FormFeedback>
-                                                    </Col>
+                                            </FormGroup> */}
+                                        {/* </> : <> */}
+                                            <FormGroup row>
+                                                <Col sm={10}>
+                                                    <Button className="my-1" color="primary" onClick={() => { validateAndAddOrg() }} type="button">{"Upload"}</Button>
+                                                </Col>
 
-                                                </FormGroup>
-                                                <FormGroup row>
-                                                    <Col sm={10}>
-                                                        <Button className="my-1" color="primary" onClick={() => { validateAndCreateLot() }} type="button">{"Create Lot"}</Button>
-                                                    </Col>
-
-                                                </FormGroup></> : <>
-                                                <FormGroup row>
-                                                    <Col sm={10}>
-                                                        <Button className="my-1" color="primary" onClick={() => { validateAndAddOrg() }} type="button">{"Upload"}</Button>
-                                                    </Col>
-
-                                                </FormGroup></>}
-                                        </Col>
-                                    </Form>
-                                </>
-                                    : <></>}
+                                            </FormGroup>
+                                            {/* </>} */}
+                                    </Col>
+                                </Form>
+                                {/* </>
+                                    : <>Loading</>} */}
                             </Card>
                         </Card>
                     </div>

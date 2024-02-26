@@ -1,12 +1,8 @@
 import React, { useEffect, useState } from "react";
-import Header from "../../components/Headers/Header";
 import { useHistory } from "react-router-dom";
-import { routes, headers } from "../../helper/config";
-import NoDataCard from "./NoDataCard";
 import ReactPaginate from "react-paginate";
 import "./admin.css";
 
-import ProgressBar from "./ProgressBar";
 import {
   Badge,
   Card,
@@ -32,22 +28,20 @@ import {
   Dropdown,
 } from "reactstrap";
 import { useDispatch, useSelector } from "react-redux";
-import * as UserAction from "../../actions/user";
-import Axios from "axios";
-import AddOrg from "./AddOrg";
-import * as OrgActions from "../../actions/organization";
+import * as Lots from "../../actions/lot";
+import "../../reducers/lot";
 import UploadPDF from "./UploadPDF";
 
 export default function LotList() {
   let history = useHistory();
   const dispatch = useDispatch();
-  const isLoading = useSelector((state) => state.User.isLoading);
-  const userList = useSelector((state) => state.User.userList);
-  const userProfileData = useSelector(
-    (state) => state?.User?.login?.decodedData
-  );
+  // const isLoading = useSelector((state) => state.User.isLoading);
+  // const userList = useSelector((state) => state.User.userList);
+  // const userProfileData = useSelector(
+  //   (state) => state?.User?.login?.decodedData
+  // );
 
-  const lotList = [{
+  const lotListData = [{
     "lotNumber": "123",
     "shipperId": "123QWERTT",
     "wholeSellerId": "QWERTY123",
@@ -73,8 +67,60 @@ export default function LotList() {
     "wholeSellerId": "QWERTY567",
     "bankId": "567QWERTY567",
   },];
+
   const [dropdownOpen, setDropdownOpen] = useState({});
   const [isBill, setIsBill] = useState(true);
+  const lotState = useSelector((state) => state.Lot.lotList);
+  // const lot_List = useSelector((state) => state.Lot.lotList.docs);
+  const { totalPages, docs } = lotState;
+
+
+  const [paginationData, setPaginationData] = useState({ selectedPage: 0 });
+  const [isLoading, setIsLoading] = useState(false)
+
+  // const [userList, setUserList] = useState([])
+
+  // const [lotList, setorgList] = useState([]);
+
+
+  const [pageCount, setPageCount] = useState([]);
+
+  const [modal, setModal] = useState(false);
+
+  const toggleModal = () => setModal(!modal);
+
+  useEffect(() => {
+    setPageCount(totalPages + 1);
+  }, [lotState]);
+
+  const handlePageClick = async (page) => {
+    setPaginationData({
+      ...paginationData,
+      selectedPage: page.selected,
+    });
+    await fetchData();
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    console.log("********** Page ***********");
+    // console.log(page);
+    console.log(paginationData.selectedPage);
+    setIsLoading(true);
+    dispatch(
+      Lots.getLOTList({
+        pagination: paginationData.selectedPage,
+        size: 5,
+      })
+    );
+    setIsLoading(false);
+  };
+
+  console.log("*********************");
+  console.log(docs?.length);
 
   const toggleDropdown = (itemId) => {
     setDropdownOpen(prevState => ({
@@ -89,86 +135,6 @@ export default function LotList() {
     toggleModal();
 
   };
-
-  const [paginationData, setPaginationData] = useState({ selectedPage: 0 });
-  // const [isLoading, setIsLoading] = useState(false)
-
-  // const [userList, setUserList] = useState([])
-
-  // const [lotList, setorgList] = useState([]);
-
-
-  const [pageCount, setPageCount] = useState([]);
-
-  const [modal, setModal] = useState(false);
-
-  const toggleModal = () => setModal(!modal);
-  // useEffect(() => {
-  //   setPageCount(userList.totalPages);
-  // }, [userList]);
-
-  // const fetchData = () => {
-  //   Axios.get("http://localhost:3000/users")
-  //     .then((response) => {
-  //       const tableList = setData(response.data);
-  //       console.log("printing axios data", tableList);
-  //     })
-  //     .catch((error) => {
-  //       console.log("Error fetching data:", error);
-  //     });
-  // };
-
-  // const handlePageClick = (data) => {
-  //   const { selected } = data; // The selected page index
-
-  //   // Update the current page based on the selected page index
-  //   setCurrentPage(selected);
-  // };
-
-  const handlePageClick = (page) => {
-    console.log("selected page is@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@", page);
-    setPaginationData({
-      ...paginationData,
-      selectedPage: page.selected,
-    });
-  };
-
-
-  useEffect(() => {
-    console.log(`-------------------------------`);
-
-    const fetchData = async () => {
-      try {
-        const response = await dispatch(OrgActions.getORGList({
-          page: paginationData.selectedPage,
-          size: 10,
-        }));
-        console.log("response from org list", response);
-        // Update state with fetched data
-        // setorgList(response);
-      } catch (error) {
-        console.error('Error fetching organization data:', error);
-      }
-    };
-
-    fetchData(); // Fetch data when component mounts
-
-
-
-
-  }, []);
-
-  useEffect(() => {
-    console.log("pagination data changed", paginationData);
-
-    dispatch(OrgActions.getORGList({
-      page: paginationData.selectedPage,
-      size: 10,
-    }));
-  }, [paginationData]);
-
-
-
 
 
   // let view = userList?.docs?.map((user, i) => (
@@ -191,7 +157,7 @@ export default function LotList() {
   //     </td>
   //   </tr>
   // ));
-  let view = lotList?.map((lot, i) => (
+  let view = lotListData?.map((lot, i) => (
     <tr key={i}>
       <td> {lot.lotNumber}</td>
       <td> {lot.shipperId}</td>
@@ -231,7 +197,11 @@ export default function LotList() {
       <Spinner type="grow" color="dark" />
     </div>
   );
-
+  if (isLoading) {
+    return (<>
+      <Card body></Card>
+    </>);
+  }
   return (
     <>
       <Card body>
