@@ -15,11 +15,11 @@ const lotSchema = mongoose.Schema({
     confirmQty: { type: Number, required: false },
     tax: { type: Number, required: false },
     unitOfMeasure: { type: String, required: false },
-    shipperReference: { type: String, required: false },
+    shipperReferenceId: { type: String, required: false },
 
     //from request body
     exporterId: { type: String, required: false },
-    bankId: { type: String, required: false },
+    bankerId: { type: String, required: false },
     wholeSellerId: { type: String, required: false },
     transporterId: { type: String, required: false },
 

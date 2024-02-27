@@ -133,6 +133,7 @@ const uploadFile = async (data, orgName) => {
 };
 module.exports.imageUpload = imageUpload;
 module.exports.uploadFile = uploadFile;
+module.exports.getDataHash = getDataHash;
 
 //how to use uploadFile
 // const uploadFile = require('./fileUpload').uploadFile;
