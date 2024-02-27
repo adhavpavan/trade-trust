@@ -37,7 +37,7 @@ export function getORGList(data) {
             dispatch(createAction(END_GET_ORGS, {
                 docs: docs,
                 totalPages: totalPages,
-                totalDocs: totalPages
+                totalDocs: totalDocs
             }));
             // Optionally, you can return an object containing the necessary key values
             return { docs, hasNextPage, hasPrevPage, limit, nextPage, offset, page, pagingCounter, prevPage, totalDocs, totalPages };
