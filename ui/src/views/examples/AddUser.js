@@ -15,17 +15,7 @@ const AddUser = (props) => {
     } = props;
 
     const { addToast } = useToasts();
-    // const dispatch = useDispatch();
     const isLoading = useSelector((state) => state.Agreement.isLoading);
-
-    // const decodedData = useSelector(
-    //     (state) => state?.User?.login?.decodedData
-    // );
-
-    // useEffect(() => {
-    //     console.log("-----------------qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq----------------------", decodedData)
-
-    // }, [decodedData])
 
 
     const [name, setName] = useState('')
@@ -33,8 +23,11 @@ const AddUser = (props) => {
     const [password, setPassword] = useState('')
     const [isValidating, setIsValidating] = useState(false)
     const dispatch = useDispatch();
+    const userProfileData = useSelector(
+        (state) => state?.User?.login?.decodedData
+    );
 
-    const validateAndAddContract = () => {
+    const validateAndAddUser = () => {
         let isInvalid = false
 
         setIsValidating(true)
@@ -76,17 +69,26 @@ const AddUser = (props) => {
 
 
     const addUser = async () => {
-        // UserAction.startLoading;
-        // const data = new FormData()
-        // data.append('name', name)
-        // data.append('email', email)
-        // data.append('password', password)
-        // // data.append('firstParty', decodedData?.orgId === 1 ? 'Org1' : "Org2")
-        // UserAction.startLoading;
-        // var response = await dispatch(UserAction.addUser(data)).then(() => {
-        //     UserAction.endLoading();
-        // });
-        // console.log(response);
+        setIsValidating(true)
+        const data = {
+            'name': name,
+            'email': email,
+            'password': password,
+            'department': 'financial',
+            'orgId': userProfileData?.orgId
+        }
+        dispatch(UserAction.addUser(data)).then(() => {
+            addToast(`User created successfully`, {
+                appearance: 'success',
+                autoDismiss: true,
+            });
+            toggle();
+        }).catch((error) => {
+            alert(error)
+        }).finally(() => {
+            resetInput()
+            setIsValidating(false)
+        });
     };
 
 
@@ -141,7 +143,7 @@ const AddUser = (props) => {
                         </Card>
 
                         <ModalFooter>
-                            <Button color="primary" onClick={() => { validateAndAddContract() }}>Submit User</Button>{' '}
+                            <Button color="primary" onClick={() => { validateAndAddUser() }}>Submit User</Button>{' '}
                             <Button color="secondary" onClick={toggle}>Cancel</Button>
                         </ModalFooter>
                     </>)
