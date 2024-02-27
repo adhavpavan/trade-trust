@@ -34,8 +34,16 @@ export function getLOTList(data) {
                 headers());
             console.log(`Orgs fetched successfully`);
             console.log("000000000000000000000000000000000000000000000000000000000000000000000000", response.data.payload);
-            dispatch(createAction(END_GET_LOTS, response.data.payload));
-            return response.data.payload;
+            // const orgList = response.data.payload;
+            const { docs, hasNextPage, hasPrevPage, limit, nextPage, offset, page, pagingCounter, prevPage, totalDocs, totalPages } = response.data.payload;
+
+            dispatch(createAction(END_GET_LOTS, {
+                docs: docs,
+                totalPages: totalPages,
+                totalDocs: totalDocs
+            }));
+            // Optionally, you can return an object containing the necessary key values
+            return { docs, hasNextPage, hasPrevPage, limit, nextPage, offset, page, pagingCounter, prevPage, totalDocs, totalPages };
         } catch (err) {
             dispatch(createAction(END_GET_LOTS));
             console.log("Error occurred", null, err);

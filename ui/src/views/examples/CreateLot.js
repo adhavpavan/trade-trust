@@ -3,7 +3,7 @@ import Header from "../../components/Headers/Header";
 import { useToasts } from 'react-toast-notifications';
 import { useDispatch, useSelector } from "react-redux";
 import * as OrgActions from "../../actions/organization";
-import * as Lot from "../../actions/lot";
+import * as LotAction from "../../actions/lot";
 import {
     Card,
     CardHeader,
@@ -216,10 +216,10 @@ const CreateLot = () => {
     }
 
     const handleUpload = () => {
-        Lot.startLoading();
+        LotAction.startLoading();
         const formData = new FormData();
         formData.append('xls', csvFile);
-        formData.append('data', { "bankerId": bankId, "wholesellerid": wholeSellerId, "transporterId": userProfileData?.orgId });
+        formData.append('data', JSON.stringify({ "bankerId": bankId, "wholesellerid": wholeSellerId, "transporterId": userProfileData?.orgId }));
 
 
         // axios.post('/upload', formData, {
@@ -232,7 +232,7 @@ const CreateLot = () => {
         //     console.error('Error uploading file:', error);
         // });
 
-        dispatch(Lot.uplodCSV(formData)).then(() => {
+        dispatch(LotAction.uplodCSV(formData)).then(() => {
             addToast(`CSV uploaded successfully`, {
                 appearance: 'success',
                 autoDismiss: true,
@@ -245,7 +245,7 @@ const CreateLot = () => {
             // resetInput()
             setIsValidating(false);
         })
-        Lot.endLoading();
+        LotAction.endLoading();
     };
 
     const inputChangeHandler = (value, fieldName) => {
@@ -353,7 +353,7 @@ const CreateLot = () => {
                                                 </Col>
                                             </FormGroup> */}
                                         {/* {csvFile !== '' ? <> */}
-                                            {/* <FormGroup row>
+                                        {/* <FormGroup row>
 
                                             <Label sm={2} >Vendor</Label>
                                             <Col sm={10}>
@@ -441,13 +441,13 @@ const CreateLot = () => {
 
                                             </FormGroup> */}
                                         {/* </> : <> */}
-                                            <FormGroup row>
-                                                <Col sm={10}>
-                                                    <Button className="my-1" color="primary" onClick={() => { validateAndAddOrg() }} type="button">{"Upload"}</Button>
-                                                </Col>
+                                        <FormGroup row>
+                                            <Col sm={10}>
+                                                <Button className="my-1" color="primary" onClick={() => { validateAndAddOrg() }} type="button">{"Upload"}</Button>
+                                            </Col>
 
-                                            </FormGroup>
-                                            {/* </>} */}
+                                        </FormGroup>
+                                        {/* </>} */}
                                     </Col>
                                 </Form>
                                 {/* </>

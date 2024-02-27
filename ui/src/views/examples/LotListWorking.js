@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import ReactPaginate from "react-paginate";
 import "./admin.css";
-
+import '../../reducers/lot';
 import {
   Badge,
   Card,
@@ -28,19 +28,12 @@ import {
   Dropdown,
 } from "reactstrap";
 import { useDispatch, useSelector } from "react-redux";
-import * as Lots from "../../actions/lot";
+// import * as LotAction from "../../actions/lot";
+import * as LotActions from "../../actions/lot";
 import "../../reducers/lot";
 import UploadPDF from "./UploadPDF";
 
 export default function LotList() {
-  let history = useHistory();
-  const dispatch = useDispatch();
-  // const isLoading = useSelector((state) => state.User.isLoading);
-  // const userList = useSelector((state) => state.User.userList);
-  // const userProfileData = useSelector(
-  //   (state) => state?.User?.login?.decodedData
-  // );
-
   const lotListData = [{
     "lotNumber": "123",
     "shipperId": "123QWERTT",
@@ -68,12 +61,18 @@ export default function LotList() {
     "bankId": "567QWERTY567",
   },];
 
+  let history = useHistory();
+  const dispatch = useDispatch();
   const [dropdownOpen, setDropdownOpen] = useState({});
   const [isBill, setIsBill] = useState(true);
   // const lotState = useSelector((state) => state.LotData.lots);
+  console.log("Here *****************");
+  const newLot = useSelector((state) => console.log(state));
+
+  const lotState = useSelector((state) => state.LotData.lots);
   // const lot_List = useSelector((state) => state.Lot.lotList.docs);
-  // const { totalPages } = lotState;
-  // const listOfLot = useSelector((state) => state.LotData.lots.doc);
+  const { totalPages } = lotState;
+  const listOfLot = useSelector((state) => state.LotData.lots?.doc);
 
 
   const [paginationData, setPaginationData] = useState({ selectedPage: 0 });
@@ -90,38 +89,38 @@ export default function LotList() {
 
   const toggleModal = () => setModal(!modal);
 
-  // useEffect(() => {
-  //   setPageCount(totalPages + 1);
-  // }, [lotState]);
+  useEffect(() => {
+    setPageCount(totalPages + 1);
+  }, [lotState]);
 
-  // const handlePageClick = async (page) => {
-  //   setPaginationData({
-  //     ...paginationData,
-  //     selectedPage: page.selected,
-  //   });
-  //   await fetchData();
-  // };
+  const handlePageClick = async (page) => {
+    setPaginationData({
+      ...paginationData,
+      selectedPage: page.selected,
+    });
+    await fetchData();
+  };
 
-  // useEffect(() => {
-  //   fetchData();
-  // }, []);
+  useEffect(() => {
+    fetchData();
+  }, []);
 
-  // const fetchData = async () => {
-  //   console.log("********** Page ***********");
-  //   // console.log(page);
-  //   console.log(paginationData.selectedPage);
-  //   setIsLoading(true);
-  //   dispatch(
-  //     Lots.getLOTList({
-  //       pagination: paginationData.selectedPage,
-  //       size: 5,
-  //     })
-  //   );
-  //   setIsLoading(false);
-  // };
+  const fetchData = async () => {
+    console.log("********** Page ***********");
+    // console.log(page);
+    console.log(paginationData.selectedPage);
+    setIsLoading(true);
+    dispatch(
+      LotActions.getLOTList({
+        pagination: paginationData.selectedPage,
+        size: 5,
+      })
+    );
+    setIsLoading(false);
+  };
 
-  // console.log("*********** listOfLot **********");
-  // console.log(listOfLot?.length);
+  console.log("*********** listOfLot **********");
+  console.log(listOfLot?.length);
 
   const toggleDropdown = (itemId) => {
     setDropdownOpen(prevState => ({
@@ -241,7 +240,7 @@ export default function LotList() {
           </Col>
         </Row>
       </Container>
-      {/* <ReactPaginate
+      <ReactPaginate
         previousLabel={"Previous"}
         nextLabel={"Next"}
         breakLabel={"..."}
@@ -253,7 +252,7 @@ export default function LotList() {
         containerClassName={"pagination"}
         subContainerClassName={"pages pagination"}
         activeClassName={"active"}
-      /> */}
+      />
     </>
   );
 }

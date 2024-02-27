@@ -5,7 +5,7 @@ import { useToasts } from 'react-toast-notifications'
 import { getTimeStamp } from '../../helper/utils'
 import { useDispatch, useSelector } from 'react-redux';
 
-import * as Organization from '../../actions/organization'
+import * as PDFActions from '../../actions/uploadPDF';
 const UploadPDF = (props) => {
     const {
         className,
@@ -17,8 +17,8 @@ const UploadPDF = (props) => {
 
     const { addToast } = useToasts();
     const dispatch = useDispatch();
-    const isLoading = useSelector((state) => state.Organization.isLoading);
-
+    // const isLoading = useSelector((state) => state.PDFData.isLoading);
+    const [isLoading, setLoading] = useState(false);
     const decodedData = useSelector(
         (state) => state?.User?.login?.decodedData
     );
@@ -94,25 +94,43 @@ const UploadPDF = (props) => {
         // const data = new FormData()
         // data.append('name', orgName)
 
-
-        const data = {
-            name: name,
-            type: bill,
-            parentId: decodedData?.orgId,
+        setLoading(true);
+        const formData = new FormData();
+        if (bill !== '') {
+            formData.append('pdf', bill);
+        } else {
+            formData.append('pdf', invoice);
         }
 
-        dispatch(Organization.addORG(data)).then(() => {
-            addToast(`Organization created successfully`, {
-                appearance: 'success',
-                autoDismiss: true,
-            });
-            toggle();
-        }).catch((error) => {
-            alert(error)
-        }).finally(() => {
-            resetInput()
-            setIsValidating(false)
-        })
+        if (isBill) {
+            dispatch(PDFActions.uplodBill(formData)).then(() => {
+                addToast(`Bill uploaded successfully`, {
+                    appearance: 'success',
+                    autoDismiss: true,
+                });
+                toggle();
+            }).catch((error) => {
+                alert(error)
+            }).finally(() => {
+                resetInput()
+                setIsValidating(false)
+            })
+        } else {
+
+            dispatch(PDFActions.uplodInvoice(formData)).then(() => {
+                addToast(`Invoice uploaded successfully`, {
+                    appearance: 'success',
+                    autoDismiss: true,
+                });
+                toggle();
+            }).catch((error) => {
+                alert(error)
+            }).finally(() => {
+                resetInput()
+                setIsValidating(false)
+            })
+        }
+        setLoading(false);
     }
 
 
@@ -165,13 +183,13 @@ const UploadPDF = (props) => {
               </FormGroup> */}
 
                                     <FormGroup row>
-                                            {
-                                                isBill ? <>
-                                                    <Label sm={2}>Bill</Label>
-                                                </> : <>
-                                                        <Label sm={2}>Invoice</Label>
-                                                </>
-                                            }
+                                        {
+                                            isBill ? <>
+                                                <Label sm={2}>Bill</Label>
+                                            </> : <>
+                                                <Label sm={2}>Invoice</Label>
+                                            </>
+                                        }
                                         <Col sm={9}>
                                             {
                                                 isBill ?
