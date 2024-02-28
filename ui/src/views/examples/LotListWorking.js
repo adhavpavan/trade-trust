@@ -17,7 +17,7 @@ import {
 } from "reactstrap";
 import { useDispatch, useSelector } from "react-redux";
 import * as LotActions from "../../actions/lot";
-import UploadPDF from "./UploadPdf";
+import UploadPDF from "./UploadPDF";
 
 export default function LotList() {
   // const lotListData = [{

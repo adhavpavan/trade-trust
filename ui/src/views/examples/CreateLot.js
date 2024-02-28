@@ -123,21 +123,21 @@ const CreateLot = () => {
         let isInvalid = false
         setIsValidating(true)
 
-        if (shipperId === '') {
+        if (shipperId === '' || shipperId === 'Select') {
             addToast(`Please enter shipper id`, {
                 appearance: 'error',
                 autoDismiss: true,
             })
             isInvalid = true
         }
-        if (bankId === '') {
+        if (bankId === '' || bankId === 'Select') {
             addToast(`Please enter bank id`, {
                 appearance: 'error',
                 autoDismiss: true,
             })
             isInvalid = true
         }
-        if (wholeSellerId === '') {
+        if (wholeSellerId === '' || wholeSellerId === 'Select') {
             addToast(`Please enter wholeSeller id`, {
                 appearance: 'error',
                 autoDismiss: true,
@@ -287,7 +287,12 @@ const CreateLot = () => {
                                             {/* <Col> */}
                                             <Label sm={2}>Shipper Id</Label>
                                             <Col sm={10}>
-                                                <Input invalid={isValidating && shipperId === ''} onChange={e => { inputChangeHandler(e.target.value, 'shipperId') }} placeholder="Shipper Id" />
+                                                <CustomInput type='select' invalid={isValidating && (shipperId === '' || shipperId === 'Select')} onChange={e => { inputChangeHandler(e.target.value, 'shipperId') }} placeholder="Shipper Id" >
+                                                    <option>Select</option>
+                                                    <option>786VFH</option>
+                                                    <option>809VFG</option>
+                                                    <option>432ASD</option>
+                                                </CustomInput>
                                                 <FormFeedback>*Required</FormFeedback>
                                             </Col>
                                             {/* </Col> */}
@@ -299,7 +304,12 @@ const CreateLot = () => {
                                             {/* <Col> */}
                                             <Label sm={2}>Bank Id</Label>
                                             <Col sm={10}>
-                                                <Input invalid={isValidating && bankId === ''} onChange={e => { inputChangeHandler(e.target.value, 'bankId') }} placeholder="Bank Id" />
+                                                <CustomInput type='select' invalid={isValidating && (bankId === '' || bankId === 'Select')} onChange={e => { inputChangeHandler(e.target.value, 'bankId') }} placeholder="Bank Id" >
+                                                    <option>Select</option>
+                                                    <option>786VFH</option>
+                                                    <option>809VFG</option>
+                                                    <option>432ASD</option>
+                                                </CustomInput>
                                                 <FormFeedback>*Required</FormFeedback>
                                             </Col>
                                             {/* </Col> */}
@@ -307,7 +317,12 @@ const CreateLot = () => {
                                         <FormGroup row>
                                             <Label sm={2} >WholeSeller Id</Label>
                                             <Col sm={10}>
-                                                <Input invalid={isValidating && wholeSellerId === ''} onChange={e => { inputChangeHandler(e.target.value, 'wholeSellerId') }} placeholder="WholeSeller Id" />
+                                                <CustomInput type='select' invalid={isValidating && (wholeSellerId === '' || wholeSellerId === 'Select')} onChange={e => { inputChangeHandler(e.target.value, 'wholeSellerId') }} placeholder="WholeSeller Id" >
+                                                    <option>Select</option>
+                                                    <option>786VFH</option>
+                                                    <option>809VFG</option>
+                                                    <option>432ASD</option>
+                                                </CustomInput>
                                                 <FormFeedback>*Required</FormFeedback>
                                             </Col>
                                         </FormGroup>
