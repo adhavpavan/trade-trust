@@ -11,14 +11,11 @@ const logger = require('../logger')(module);
 
 const getDataHash = (data) => {
   try {
-    const crypto = require('crypto');
     const hash = crypto.createHash('sha1');
-    hash.setEncoding('hex');
-    hash.write(data);
-    hash.end();
-    return hash.read();
+    hash.update(data);
+    return hash.digest('hex');
   } catch (error) {
-    console.log(`Error occurred while creating file data hash: Error: ${error}`);
+    console.error(`Error occurred while creating data hash: ${error}`);
     return null;
   }
 };
