@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
 import * as LotActions from "../actions/lot";
 
-const initialLOTListState = {
+const initialLotListState = {
     docs: [],
     totalPages: 0,
     totalDocs: 0
@@ -28,6 +28,38 @@ const initialCSVDataState = {
     //for internal use only
     docType: '',
 };
+
+function getIsLoading(state = false, action) {
+    switch (action.type) {
+        case LotActions.START_LOADING:
+            return true;
+        case LotActions.END_LOADING:
+            return false;
+        default:
+            return state;
+    }
+}
+
+function getLotList(state = initialLotListState, action) {
+
+    switch (action.type) {
+        case LotActions.END_GET_LOTS:
+            if (action.error) {
+                // Handle error state
+                return state;
+            }
+            return {
+                ...state,
+                docs: action.payload.docs ?? [],
+                totalPages: action.payload.totalPages,
+                totalDocs: action.payload.totalDocs
+            };
+        default:
+            return state;
+    }
+}
+
+
 
 function getCSVData(state = initialCSVDataState, action) {
     switch (action.type) {
@@ -64,38 +96,10 @@ function getCSVData(state = initialCSVDataState, action) {
     }
 }
 
-function getIsLoading(state = false, action) {
-    switch (action.type) {
-        case LotActions.START_LOADING:
-            return true;
-        case LotActions.END_LOADING:
-            return false;
-        default:
-            return state;
-    }
-}
-
-function getLOTList(state = initialLOTListState, action) {
-    switch (action.type) {
-        case LotActions.END_GET_LOTS:
-            if (action.error) {
-                // Handle error state
-                return state;
-            }
-            return {
-                ...state,
-                docs: action.payload.docs ?? [],
-                totalPages: action.payload.totalPages,
-                totalDocs: action.payload.totalDocs
-            };
-        default:
-            return state;
-    }
-}
 
 
 const LotData = combineReducers({
-    lots: getLOTList,
+    lotList: getLotList,
     csvData: getCSVData,
     isLoading: getIsLoading
 });

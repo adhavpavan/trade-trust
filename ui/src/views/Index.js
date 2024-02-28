@@ -144,10 +144,10 @@ export default function Index() {
                         </TabPane> : activeTab == "4" ? <TabPane tabId="4">
                           <Row>
                             <Col sm="12">
-                              <Card body>
-                                <LotList></LotList>
+                        
+                                <LotList />
                                 {/* <ExpiringContracts /> */}
-                              </Card>
+                         
                             </Col>
                           </Row>
                         </TabPane>

@@ -2,87 +2,62 @@ import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import ReactPaginate from "react-paginate";
 import "./admin.css";
-import '../../reducers/lot';
+import ProgressBar from "./ProgressBar";
 import {
-  Badge,
   Card,
-  CardHeader,
-  FormGroup,
-  CardFooter,
   DropdownMenu,
   DropdownItem,
-  UncontrolledDropdown,
   DropdownToggle,
-  Media,
-  Pagination,
-  PaginationItem,
-  PaginationLink,
   Table,
   Container,
   Spinner,
   Row,
-  UncontrolledTooltip,
-  Button,
   Col,
-  CardBody,
   Dropdown,
 } from "reactstrap";
 import { useDispatch, useSelector } from "react-redux";
-// import * as LotAction from "../../actions/lot";
 import * as LotActions from "../../actions/lot";
-import "../../reducers/lot";
 import UploadPDF from "./UploadPDF";
 
 export default function LotList() {
-  const lotListData = [{
-    "lotNumber": "123",
-    "shipperId": "123QWERTT",
-    "wholeSellerId": "QWERTY123",
-    "bankId": "123QWERTY123",
-  }, {
-    "lotNumber": "234",
-    "shipperId": "234QWERTT",
-    "wholeSellerId": "QWERTY234",
-    "bankId": "234QWERTY234",
-  }, {
-    "lotNumber": "345",
-    "shipperId": "345QWERTT",
-    "wholeSellerId": "QWERTY345",
-    "bankId": "345QWERTY345",
-  }, {
-    "lotNumber": "456",
-    "shipperId": "456QWERTT",
-    "wholeSellerId": "QWERTY456",
-    "bankId": "456QWERTY456",
-  }, {
-    "lotNumber": "567",
-    "shipperId": "567QWERTT",
-    "wholeSellerId": "QWERTY567",
-    "bankId": "567QWERTY567",
-  },];
+  // const lotListData = [{
+  //   "lotNumber": "123",
+  //   "shipperId": "123QWERTT",
+  //   "wholeSellerId": "QWERTY123",
+  //   "bankId": "123QWERTY123",
+  // }, {
+  //   "lotNumber": "234",
+  //   "shipperId": "234QWERTT",
+  //   "wholeSellerId": "QWERTY234",
+  //   "bankId": "234QWERTY234",
+  // }, {
+  //   "lotNumber": "345",
+  //   "shipperId": "345QWERTT",
+  //   "wholeSellerId": "QWERTY345",
+  //   "bankId": "345QWERTY345",
+  // }, {
+  //   "lotNumber": "456",
+  //   "shipperId": "456QWERTT",
+  //   "wholeSellerId": "QWERTY456",
+  //   "bankId": "456QWERTY456",
+  // }, {
+  //   "lotNumber": "567",
+  //   "shipperId": "567QWERTT",
+  //   "wholeSellerId": "QWERTY567",
+  //   "bankId": "567QWERTY567",
+  // },];
 
   let history = useHistory();
   const dispatch = useDispatch();
-  const [dropdownOpen, setDropdownOpen] = useState({});
-  const [isBill, setIsBill] = useState(true);
-  // const lotState = useSelector((state) => state.LotData.lots);
-  console.log("Here *****************");
-  const newLot = useSelector((state) => console.log(state));
-
-  const lotState = useSelector((state) => state.LotData.lots);
-  // const lot_List = useSelector((state) => state.Lot.lotList.docs);
-  const { totalPages } = lotState;
-  const listOfLot = useSelector((state) => state.LotData.lots?.doc);
-
+  const lotState = useSelector((state) => state.LotData?.lotList);
+  // const { totalPages } = lotState;
+  const totalPages = useSelector((state) => state.LotData?.lotList?.totalPages);
+  const lotList = useSelector((state) => state.LotData?.lotList?.docs);
 
   const [paginationData, setPaginationData] = useState({ selectedPage: 0 });
   const [isLoading, setIsLoading] = useState(false)
-
-  // const [userList, setUserList] = useState([])
-
-  // const [lotList, setorgList] = useState([]);
-
-
+  const [dropdownOpen, setDropdownOpen] = useState({});
+  const [isBill, setIsBill] = useState(true);
   const [pageCount, setPageCount] = useState([]);
 
   const [modal, setModal] = useState(false);
@@ -90,15 +65,15 @@ export default function LotList() {
   const toggleModal = () => setModal(!modal);
 
   useEffect(() => {
-    setPageCount(totalPages + 1);
+    setPageCount(totalPages);
   }, [lotState]);
 
-  const handlePageClick = async (page) => {
+  const handlePageClick = (page) => {
     setPaginationData({
       ...paginationData,
       selectedPage: page.selected,
     });
-    await fetchData();
+    fetchData();
   };
 
   useEffect(() => {
@@ -106,12 +81,9 @@ export default function LotList() {
   }, []);
 
   const fetchData = async () => {
-    console.log("********** Page ***********");
-    // console.log(page);
-    console.log(paginationData.selectedPage);
     setIsLoading(true);
     dispatch(
-      LotActions.getLOTList({
+      LotActions.getLotList({
         pagination: paginationData.selectedPage,
         size: 5,
       })
@@ -119,15 +91,13 @@ export default function LotList() {
     setIsLoading(false);
   };
 
-  console.log("*********** listOfLot **********");
-  console.log(listOfLot?.length);
-
   const toggleDropdown = (itemId) => {
     setDropdownOpen(prevState => ({
       ...prevState,
       [itemId]: !prevState[itemId] // Toggle dropdown state for the specific item
     }));
   };
+
   const handleOptionClick = (bill) => {
     // Handle option click for a specific item
     setIsBill(bill);
@@ -157,14 +127,15 @@ export default function LotList() {
   //     </td>
   //   </tr>
   // ));
-  let view = lotListData?.map((lot, i) => (
+
+  let view = lotList?.map((lot, i) => (
     <tr key={i}>
-      <td> {lot.lotNumber}</td>
-      <td> {lot.shipperId}</td>
-      <td> {lot.wholeSellerId}</td>
-      <td> {lot.bankId}</td>
+      <td> {lot.vendor}</td>
+      <td> {lot.unitOfMeasure}</td>
+      <td> {lot.product}</td>
+      <td> {lot.agreementType}</td>
       <td>
-        <Dropdown isOpen={dropdownOpen[lot.lotNumber]} toggle={() => toggleDropdown(lot.lotNumber)}>
+        <Dropdown isOpen={dropdownOpen[lot.id]} toggle={() => toggleDropdown(lot.id)}>
           <DropdownToggle caret={false}>
             {/* Icon representing the menu */}
             <i className="fas fa-ellipsis-v"></i>
@@ -197,40 +168,36 @@ export default function LotList() {
       <Spinner type="grow" color="dark" />
     </div>
   );
-  if (isLoading) {
-    return (<>
-      <Card body></Card>
-    </>);
-  }
+
+
+  console.log("*********** listOfLot **********");
+  console.log(lotList?.length);
   return (
     <>
       <Card body>
-        <Table className="align-items-center table-flush"
-          responsive>
-          <thead className="thead-light">
-            <tr>
-              <th>Lot Number</th>
-              <th>Shipper Id</th>
-              <th>WholeSeller Id</th>
-              <th>Bank Id</th>
-              <th>Documents</th>
+        {
+          isLoading ?
+            <div className="row justify-content-center">
+              <ProgressBar />
+            </div> :
+            <Table className="align-items-center table-flush"
+              responsive>
+              <thead className="thead-light">
+                <tr>
+                  <th>Lot Number</th>
+                  <th>Shipper Id</th>
+                  <th>WholeSeller Id</th>
+                  <th>Bank Id</th>
+                  <th>Documents</th>
 
-              <th scope="col" />
-            </tr>
-          </thead>
-          <tbody>
-            {view}
-            {/* {lotList.map((item, index) => {
-              <tr key={index}>
-                <td>{item.lotNumber}</td>
-                <td>{item.shipperId}</td>
-                <td>{item.wholeSellerId}</td>
-                <td>{item.bankId}</td>
-              </tr>;
-            })} */}
-          </tbody>
-        </Table>
-
+                  <th scope="col" />
+                </tr>
+              </thead>
+              <tbody>
+                {view}
+              </tbody>
+            </Table>
+        }
         <UploadPDF toggle={toggleModal} isBill={isBill} onNewClick={false} modal={modal} />
       </Card>
       <Container>
