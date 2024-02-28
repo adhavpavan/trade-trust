@@ -140,7 +140,7 @@ export function updateUserStatus(data) {
 
 export function addUser(data) {
   return dispatch => {
-    let url = 'http://localhost:3004/users'
+    let url = 'http://localhost:3000/v1/users'
     dispatch(createAction(START_ADD_USERS));
     return axios.post(url, data, headers())
       .then(resp => {
@@ -166,11 +166,6 @@ export function addUser(data) {
         }
       })
   }
-
-
-
-
-
 }
 
 export function registerUser(data) {

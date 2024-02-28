@@ -1,12 +1,17 @@
+
 const express = require('express');
-const {auth, adminAuth} = require('../../middlewares/auth');
+const { auth, adminAuth } = require('../../middlewares/auth');
 const validate = require('../../middlewares/validate');
-const { organizationValidation } = require('../../validations');
-const { organizationController } = require('../../controllers');
-// const userValidation = require('../../validations/organization.validation');
-// const userController = require('../../controllers/organization.controller');
+const { lotValidation } = require('../../validations');
+const { lotController } = require('../../controllers');
+const multer = require('multer');
+
+// const userValidation = require('../../validations/lot.validation');
+// const userController = require('../../controllers/lot.controller');
 
 const router = express.Router();
+const upload = multer({ dest: 'uploads/' });
+
 
 // router
 // .route('/')
@@ -19,29 +24,32 @@ const router = express.Router();
 
 router
   .route('/')
-  .post(adminAuth, validate(organizationValidation.createOrganization), organizationController.createOrganization)
-  .get(adminAuth, validate(organizationValidation.getOrganization), organizationController.getOrganizations)
-//add route for /search?name=
-router
- .route('/search')
-.get( adminAuth,organizationController.getOrganizationsByName)
+  .post(
+    auth,
+    //  validate(lotValidation.createLot), 
+    upload.single('xls'),
+    lotController.createLot)
+
+  .get(
+    auth, 
+    validate(lotValidation.getLot), lotController.getLots);
 
 module.exports = router;
 
 /**
  * @swagger
  * tags:
- *   name: Organizations
- *   description: Organization management and retrieval
+ *   name: Lots
+ *   description: Lot management and retrieval
  */
 
 /**
  * @swagger
- * /organizations:
+ * /lots:
  *   post:
- *     summary: Create an organization
- *     description: Only admins can create other organizations.
- *     tags: [Organizations]
+ *     summary: Create an lot
+ *     description: Only admins can create other lots.
+ *     tags: [Lots]
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -69,19 +77,19 @@ module.exports = router;
  *                 description: At least one number and one letter
  *               role:
  *                  type: string
- *                  enum: [organization, admin]
+ *                  enum: [lot, admin]
  *             example:
  *               name: fake name
  *               email: fake@example.com
  *               password: password1
- *               role: organization
+ *               role: lot
  *     responses:
  *       "201":
  *         description: Created
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/components/schemas/Organization'
+ *                $ref: '#/components/schemas/Lot'
  *       "400":
  *         $ref: '#/components/responses/DuplicateEmail'
  *       "401":
@@ -90,9 +98,9 @@ module.exports = router;
  *         $ref: '#/components/responses/Forbidden'
  *
  *   get:
- *     summary: Get all organizations
- *     description: Only admins can retrieve all organizations.
- *     tags: [Organizations]
+ *     summary: Get all lots
+ *     description: Only admins can retrieve all lots.
+ *     tags: [Lots]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -100,12 +108,12 @@ module.exports = router;
  *         name: name
  *         schema:
  *           type: string
- *         description: Organization name
+ *         description: Lot name
  *       - in: query
  *         name: role
  *         schema:
  *           type: string
- *         description: Organization role
+ *         description: Lot role
  *       - in: query
  *         name: sortBy
  *         schema:
@@ -117,7 +125,7 @@ module.exports = router;
  *           type: integer
  *           minimum: 1
  *         default: 10
- *         description: Maximum number of organizations
+ *         description: Maximum number of lots
  *       - in: query
  *         name: page
  *         schema:
@@ -136,7 +144,7 @@ module.exports = router;
  *                 results:
  *                   type: array
  *                   items:
- *                     $ref: '#/components/schemas/Organization'
+ *                     $ref: '#/components/schemas/Lot'
  *                 page:
  *                   type: integer
  *                   example: 1
@@ -157,11 +165,11 @@ module.exports = router;
 
 /**
  * @swagger
- * /organizations/{id}:
+ * /lots/{id}:
  *   get:
- *     summary: Get a organization
- *     description: Logged in organizations can fetch only their own organization information. Only admins can fetch other organizations.
- *     tags: [Organizations]
+ *     summary: Get a lot
+ *     description: Logged in lots can fetch only their own lot information. Only admins can fetch other lots.
+ *     tags: [Lots]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -170,14 +178,14 @@ module.exports = router;
  *         required: true
  *         schema:
  *           type: string
- *         description: Organization id
+ *         description: Lot id
  *     responses:
  *       "200":
  *         description: OK
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/components/schemas/Organization'
+ *                $ref: '#/components/schemas/Lot'
  *       "401":
  *         $ref: '#/components/responses/Unauthorized'
  *       "403":
@@ -186,9 +194,9 @@ module.exports = router;
  *         $ref: '#/components/responses/NotFound'
  *
  *   patch:
- *     summary: Update a organization
- *     description: Logged in organizations can only update their own information. Only admins can update other organizations.
- *     tags: [Organizations]
+ *     summary: Update a lot
+ *     description: Logged in lots can only update their own information. Only admins can update other lots.
+ *     tags: [Lots]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -197,7 +205,7 @@ module.exports = router;
  *         required: true
  *         schema:
  *           type: string
- *         description: Organization id
+ *         description: Lot id
  *     requestBody:
  *       required: true
  *       content:
@@ -226,7 +234,7 @@ module.exports = router;
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/components/schemas/Organization'
+ *                $ref: '#/components/schemas/Lot'
  *       "400":
  *         $ref: '#/components/responses/DuplicateEmail'
  *       "401":
@@ -237,9 +245,9 @@ module.exports = router;
  *         $ref: '#/components/responses/NotFound'
  *
  *   delete:
- *     summary: Delete a organization
- *     description: Logged in organizations can delete only themselves. Only admins can delete other organizations.
- *     tags: [Organizations]
+ *     summary: Delete a lot
+ *     description: Logged in lots can delete only themselves. Only admins can delete other lots.
+ *     tags: [Lots]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -248,7 +256,7 @@ module.exports = router;
  *         required: true
  *         schema:
  *           type: string
- *         description: Organization id
+ *         description: Lot id
  *     responses:
  *       "200":
  *         description: No content

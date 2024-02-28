@@ -11,14 +11,11 @@ const logger = require('../logger')(module);
 
 const getDataHash = (data) => {
   try {
-    const crypto = require('crypto');
     const hash = crypto.createHash('sha1');
-    hash.setEncoding('hex');
-    hash.write(data);
-    hash.end();
-    return hash.read();
+    hash.update(data);
+    return hash.digest('hex');
   } catch (error) {
-    console.log(`Error occurred while creating file data hash: Error: ${error}`);
+    console.error(`Error occurred while creating data hash: ${error}`);
     return null;
   }
 };
@@ -133,3 +130,23 @@ const uploadFile = async (data, orgName) => {
 };
 module.exports.imageUpload = imageUpload;
 module.exports.uploadFile = uploadFile;
+module.exports.getDataHash = getDataHash;
+
+//how to use uploadFile
+// const uploadFile = require('./fileUpload').uploadFile;
+// const file = {
+  // originalname: 'test.pdf',
+  // mimetype: 'application/pdf',
+  // path: 'test.pdf',
+// };
+// const orgName = 'org1';
+// const fileMetadata = await uploadFile(file, orgName);
+// console.log(fileMetadata);
+// {
+//   id: '98463829463829463829463829463829463829463829463829463829463829463829463829463829463829463829463829463829463829463829463829463829463829463829463829463829463829463829463829463829463829
+//   orgName: 'org1',
+//   name: 'test.pdf',
+//   url: 'https://s3.amazonaws.com/org1/9846382946382
+//   contentHash: '984638294638294638294638
+// }
+

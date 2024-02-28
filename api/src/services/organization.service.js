@@ -26,7 +26,7 @@ const createOrganization = async (orgBody) => {
  * @returns {Promise<QueryResult>}
  */
 const queryOrganizations = async (filter, options) => {
-  return Organization.find(filter, options);
+  return Organization.paginate(filter, options);
 };
 
 /**
@@ -38,10 +38,15 @@ const getOrganizationById = async (id) => {
   return Organization.findById(id);
 };
 
+const getOrganizationsByName = async (name) => {
+  // list of organizations by name contains the name
+  return Organization.find({ name: { $regex: name, $options: 'i' } });
+};
 
 
 module.exports = {
   createOrganization,
   queryOrganizations,
   getOrganizationById,
+  getOrganizationsByName,
 };

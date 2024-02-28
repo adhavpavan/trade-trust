@@ -3,7 +3,9 @@ import { Button, Modal, ModalHeader, ModalBody, ModalFooter, FormFeedback, Card,
 import ProgressBar from './ProgressBar'
 import { useToasts } from 'react-toast-notifications'
 import { getTimeStamp } from '../../helper/utils'
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import * as UserAction from "../../actions/user";
+
 
 const AddUser = (props) => {
     const {
@@ -13,25 +15,19 @@ const AddUser = (props) => {
     } = props;
 
     const { addToast } = useToasts();
-    // const dispatch = useDispatch();
     const isLoading = useSelector((state) => state.Agreement.isLoading);
-
-    // const decodedData = useSelector(
-    //     (state) => state?.User?.login?.decodedData
-    // );
-
-    // useEffect(() => {
-    //     console.log("-----------------qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq----------------------", decodedData)
-
-    // }, [decodedData])
 
 
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
-    const [orgName, setOrgName] = useState('')
+    const [password, setPassword] = useState('')
     const [isValidating, setIsValidating] = useState(false)
+    const dispatch = useDispatch();
+    const userProfileData = useSelector(
+        (state) => state?.User?.login?.decodedData
+    );
 
-    const validateAndAddContract = () => {
+    const validateAndAddUser = () => {
         let isInvalid = false
 
         setIsValidating(true)
@@ -50,8 +46,8 @@ const AddUser = (props) => {
             })
             isInvalid = true
         }
-        if (orgName == '') {
-            addToast(`Please add organisiton name`, {
+        if (password == '') {
+            addToast(`Please enter password`, {
                 appearance: 'error',
                 autoDismiss: true,
             })
@@ -59,7 +55,7 @@ const AddUser = (props) => {
         }
 
         if (!isInvalid) {
-            addUser()
+            addUser();
         }
 
     }
@@ -68,20 +64,39 @@ const AddUser = (props) => {
     const resetInput = () => {
         setEmail('');
         setName('');
-        setOrgName('');
+        setPassword('');
     };
 
 
-    const addUser = () => {
-
-    }
+    const addUser = async () => {
+        setIsValidating(true)
+        const data = {
+            'name': name,
+            'email': email,
+            'password': password,
+            'department': 'financial',
+            'orgId': userProfileData?.orgId
+        }
+        dispatch(UserAction.addUser(data)).then(() => {
+            addToast(`User created successfully`, {
+                appearance: 'success',
+                autoDismiss: true,
+            });
+            toggle();
+        }).catch((error) => {
+            alert(error)
+        }).finally(() => {
+            resetInput()
+            setIsValidating(false)
+        });
+    };
 
 
     const inputChangeHandler = (value, fieldName) => {
         switch (fieldName) {
             case 'email': setEmail(value); break;
             case 'name': setName(value); break;
-            case 'orgName': setOrgName(value); break;
+            case 'password': setPassword(value); break;
 
             default:
                 break;
@@ -116,7 +131,9 @@ const AddUser = (props) => {
                                     <FormGroup row>
                                         <Label sm={2}>Organization Name</Label>
                                         <Col sm={10}>
-                                            <Input invalid={isValidating && orgName == ''} onChange={e => { inputChangeHandler(e.target.value, 'orgName') }} placeholder="Enter Organization name" />
+
+                                            <Input type="password" invalid={isValidating && password == ''} onChange={e => inputChangeHandler(e.target.value, 'password')} placeholder="Enter Password" />
+                                            {/* <Input invalid={isValidating && orgName == ''} onChange={e => { inputChangeHandler(e.target.value, 'orgName') }} placeholder="Enter Organization name" /> */}
                                             <FormFeedback>*Required</FormFeedback>
                                         </Col>
                                     </FormGroup>
@@ -126,7 +143,7 @@ const AddUser = (props) => {
                         </Card>
 
                         <ModalFooter>
-                            <Button color="primary" onClick={() => { validateAndAddContract() }}>Submit User</Button>{' '}
+                            <Button color="primary" onClick={() => { validateAndAddUser() }}>Submit User</Button>{' '}
                             <Button color="secondary" onClick={toggle}>Cancel</Button>
                         </ModalFooter>
                     </>)

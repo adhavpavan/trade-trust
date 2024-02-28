@@ -29,6 +29,7 @@ import ContractHistory from "./views/examples/ContractHistory.js";
 import LoginOrg from "views/examples/LoginOrg.js";
 import RegisterOrg from "views/examples/RegisterOrg.js";
 import OrgList from "views/examples/OrgList.js";
+import UploadPdfComponent from "views/examples/UploadPdf.js";
 
 
 
@@ -52,6 +53,13 @@ var routes = [
     name: "Organizations",
     icon: "ni ni-tv-2 text-primary",
     component: OrgList,
+    layout: "/admin"
+  },
+  {
+    path: "/uploadpdf",
+    name: "PDF",
+    icon: "ni ni-cloud-upload-96 text-pink",
+    component: UploadPdfComponent,
     layout: "/admin"
   },
   {

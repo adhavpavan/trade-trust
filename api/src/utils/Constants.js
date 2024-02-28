@@ -8,7 +8,8 @@ const USER_STATUS = {
 
 const USER_TYPE = {
   ADMIN: 'admin',
-  USER: 'user'
+  USER: 'user',
+  SUPER_ADMIN:'super-admin'
 }
 
 const ORG_DEFAULT_USER = {
