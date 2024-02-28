@@ -1,36 +1,22 @@
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import { useHistory } from "react-router-dom";
-import ReactPaginate from "react-paginate";
 import "./admin.css";
 
+import { useDispatch } from "react-redux";
 import {
-  Badge,
   Card,
-  CardHeader,
-  FormGroup,
-  CardFooter,
-  DropdownMenu,
-  DropdownItem,
-  UncontrolledDropdown,
-  DropdownToggle,
-  Media,
-  Pagination,
-  PaginationItem,
-  PaginationLink,
-  Table,
-  Container,
-  Spinner,
-  Row,
-  UncontrolledTooltip,
-  Button,
   Col,
-  CardBody,
+  Container,
   Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownToggle,
+  Row,
+  Spinner,
+  Table
 } from "reactstrap";
-import { useDispatch, useSelector } from "react-redux";
-import * as Lots from "../../actions/lot";
 import "../../reducers/lot";
-import UploadPDF from "./UploadPDF";
+import UploadPDF from "./UploadPdf";
 
 export default function LotList() {
   let history = useHistory();

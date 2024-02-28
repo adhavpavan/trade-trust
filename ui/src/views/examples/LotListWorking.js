@@ -17,7 +17,7 @@ import {
 } from "reactstrap";
 import { useDispatch, useSelector } from "react-redux";
 import * as LotActions from "../../actions/lot";
-import UploadPDF from "./UploadPDF";
+import UploadPDF from "./UploadPdf";
 
 export default function LotList() {
   // const lotListData = [{
@@ -52,7 +52,8 @@ export default function LotList() {
   const lotState = useSelector((state) => state.LotData?.lotList);
   // const { totalPages } = lotState;
   const totalPages = useSelector((state) => state.LotData?.lotList?.totalPages);
-  const lotList = useSelector((state) => state.LotData?.lotList?.docs);
+  // const lotList = useSelector((state) => state.LotData?.lotList?.docs);
+  const [lotList, setLotList] = useState([]);
 
   const [paginationData, setPaginationData] = useState({ selectedPage: 0 });
   const [isLoading, setIsLoading] = useState(false)
@@ -82,12 +83,16 @@ export default function LotList() {
 
   const fetchData = async () => {
     setIsLoading(true);
-    dispatch(
+    const list = await dispatch(
       LotActions.getLotList({
         pagination: paginationData.selectedPage,
         size: 5,
       })
     );
+
+    setLotList(list);
+  
+
     setIsLoading(false);
   };
 
@@ -128,7 +133,7 @@ export default function LotList() {
   //   </tr>
   // ));
 
-  let view = lotList?.map((lot, i) => (
+  let view = lotList?.docs?.map((lot, i) => (
     <tr key={i}>
       <td> {lot.vendor}</td>
       <td> {lot.unitOfMeasure}</td>

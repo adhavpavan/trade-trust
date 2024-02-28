@@ -28,24 +28,14 @@ export function getLotList(data) {
             const response = await Api.get(`/v1/lots?page=${pagination}&size=${size}`,
                 headers());
             console.log(`lots fetched successfully`);
-            console.log("000000000000000000000000000000000000000000000000000000000000000000000000", response.data.payload);
-            // const orgList = response.data.payload;
-            const { docs, hasNextPage, hasPrevPage, limit, nextPage, offset, page, pagingCounter, prevPage, totalDocs, totalPages } = response.data.payload;
+           
             console.log("1010101010101010101010", response.data.payload);
-            console.log(docs);
-            try {
-                dispatch(createAction(END_GET_LOTS, {
-                    docs: docs,
-                    totalPages: totalPages,
-                    totalDocs: totalDocs
-                }));
-            } catch (error) {
-                console.log('error ********');
-                console.log(error);
-            }
-            console.log("2020202020202020202", response.data.payload);
-            // Optionally, you can return an object containing the necessary key values
-            return { docs, hasNextPage, hasPrevPage, limit, nextPage, offset, page, pagingCounter, prevPage, totalDocs, totalPages };
+           
+
+            dispatch(createAction(END_GET_LOTS, response.data.payload));
+
+
+            return response.data.payload;
         } catch (err) {
             dispatch(createAction(END_GET_LOTS));
             console.log("Error occurred", null, err);
