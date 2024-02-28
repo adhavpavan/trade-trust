@@ -27,7 +27,7 @@ const AddOrg = (props) => {
     }, [decodedData])
 
 
-    const [orgType, setOrgType] = useState('')
+    const [orgType, setOrgType] = useState('transporter')
     const [orgName, setOrgName] = useState('')
     const [isValidating, setIsValidating] = useState(false)
 
@@ -59,17 +59,12 @@ const AddOrg = (props) => {
 
 
     const resetInput = () => {
-        setOrgType('');
+        setOrgType('transporter');
         setOrgName('');
     };
 
 
     const addOrg = () => {
-        console.log("Here****************");
-
-        // const data = new FormData()
-        // data.append('name', orgName)
-
 
         const data = {
             name: orgName,
@@ -123,7 +118,13 @@ const AddOrg = (props) => {
                                     <FormGroup row>
                                         <Label sm={2}>Organization Type</Label>
                                         <Col sm={10}>
-                                            <Input invalid={isValidating && orgType == ''} onChange={e => { inputChangeHandler(e.target.value, 'type') }} placeholder="Enter Organization Type" />
+                                            <CustomInput type='select' invalid={isValidating && orgType == ''} onChange={e => { inputChangeHandler(e.target.value, 'type') }} >
+                                                <option value={'transporter'}>Transporter</option>
+                                                <option value={'banker'}>Banker</option>
+                                                <option value={'exporter'}>Exporter</option>
+                                                <option value={'DTP'}>DTP</option>
+                                                <option value={'wholseller'}>Wholseller</option>
+                                            </CustomInput>
                                             <FormFeedback>*Required</FormFeedback>
                                         </Col>
                                     </FormGroup>

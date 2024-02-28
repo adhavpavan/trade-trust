@@ -191,7 +191,7 @@ export default function Admin() {
                 </FormGroup>
                 {/* <h3 className="mb-0">User List</h3> */}
 
-                <AddUser toggle={toggleModal} modal={modal} isReset={false}/>
+                <AddUser toggle={toggleModal} modal={modal} />
               </CardHeader>
               <Card body>
                 {isLoading ? (

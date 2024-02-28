@@ -11,8 +11,7 @@ const AddUser = (props) => {
     const {
         className,
         modal,
-        toggle,
-        isReset
+        toggle
     } = props;
 
     const { addToast } = useToasts();
@@ -23,7 +22,7 @@ const AddUser = (props) => {
     const [email, setEmail] = useState('')
     const [department, setDepartment] = useState('financial')
     const [password, setPassword] = useState('')
-    const [isValidating, setIsValidating] = useState(isReset)
+    const [isValidating, setIsValidating] = useState(false)
     const dispatch = useDispatch();
     const userProfileData = useSelector(
         (state) => state?.User?.login?.decodedData
@@ -74,7 +73,7 @@ const AddUser = (props) => {
         setEmail('');
         setName('');
         setPassword('');
-        setDepartment('')
+        setDepartment('financial')
     };
 
 
@@ -138,7 +137,7 @@ const AddUser = (props) => {
                                             <FormFeedback>*Required</FormFeedback>
                                         </Col>
                                     </FormGroup>
-                               
+
                                     <FormGroup row>
                                         <Label sm={2}>Department</Label>
                                         <Col sm={10}>
