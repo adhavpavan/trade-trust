@@ -1,113 +1,75 @@
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
+import ReactPaginate from "react-paginate";
 import "./admin.css";
-
-import { useDispatch } from "react-redux";
+import ProgressBar from "./ProgressBar";
 import {
   Card,
-  Col,
-  Container,
-  Dropdown,
-  DropdownItem,
   DropdownMenu,
+  DropdownItem,
   DropdownToggle,
-  Row,
+  Table,
+  Container,
   Spinner,
-  Table
+  Row,
+  Col,
+  Dropdown,
 } from "reactstrap";
-import "../../reducers/lot";
+import { useDispatch, useSelector } from "react-redux";
+import * as LotActions from "../../actions/lot";
 import UploadPDF from "./UploadPdf";
+import NoDataCard from "./NoDataCard";
 
 export default function LotList() {
+
   let history = useHistory();
   const dispatch = useDispatch();
-  // const isLoading = useSelector((state) => state.User.isLoading);
-  // const userList = useSelector((state) => state.User.userList);
-  // const userProfileData = useSelector(
-  //   (state) => state?.User?.login?.decodedData
-  // );
-
-  const lotListData = [{
-    "lotNumber": "123",
-    "shipperId": "123QWERTT",
-    "wholeSellerId": "QWERTY123",
-    "bankId": "123QWERTY123",
-  }, {
-    "lotNumber": "234",
-    "shipperId": "234QWERTT",
-    "wholeSellerId": "QWERTY234",
-    "bankId": "234QWERTY234",
-  }, {
-    "lotNumber": "345",
-    "shipperId": "345QWERTT",
-    "wholeSellerId": "QWERTY345",
-    "bankId": "345QWERTY345",
-  }, {
-    "lotNumber": "456",
-    "shipperId": "456QWERTT",
-    "wholeSellerId": "QWERTY456",
-    "bankId": "456QWERTY456",
-  }, {
-    "lotNumber": "567",
-    "shipperId": "567QWERTT",
-    "wholeSellerId": "QWERTY567",
-    "bankId": "567QWERTY567",
-  },];
-
-  const [dropdownOpen, setDropdownOpen] = useState({});
-  const [isBill, setIsBill] = useState(true);
-  // const lotState = useSelector((state) => state.LotData.lots);
-  // const lot_List = useSelector((state) => state.Lot.lotList.docs);
+  const lotState = useSelector((state) => state.LotData?.lotList);
   // const { totalPages } = lotState;
-  // const listOfLot = useSelector((state) => state.LotData.lots.doc);
-
+  const totalPages = useSelector((state) => state.LotData?.lotList?.totalPages);
+  // const lotList = useSelector((state) => state.LotData?.lotList?.docs);
+  const [lotList, setLotList] = useState([]);
 
   const [paginationData, setPaginationData] = useState({ selectedPage: 0 });
   const [isLoading, setIsLoading] = useState(false)
-
-  // const [userList, setUserList] = useState([])
-
-  // const [lotList, setorgList] = useState([]);
-
-
+  const [dropdownOpen, setDropdownOpen] = useState({});
+  const [isBill, setIsBill] = useState(true);
   const [pageCount, setPageCount] = useState([]);
 
   const [modal, setModal] = useState(false);
 
   const toggleModal = () => setModal(!modal);
 
-  // useEffect(() => {
-  //   setPageCount(totalPages + 1);
-  // }, [lotState]);
+  useEffect(() => {
+    setPageCount(totalPages);
+  }, [lotState]);
 
-  // const handlePageClick = async (page) => {
-  //   setPaginationData({
-  //     ...paginationData,
-  //     selectedPage: page.selected,
-  //   });
-  //   await fetchData();
-  // };
+  const handlePageClick = (page) => {
+    setPaginationData({
+      ...paginationData,
+      selectedPage: page.selected,
+    });
+    fetchData();
+  };
 
-  // useEffect(() => {
-  //   fetchData();
-  // }, []);
+  useEffect(() => {
+    fetchData();
+  }, []);
 
-  // const fetchData = async () => {
-  //   console.log("********** Page ***********");
-  //   // console.log(page);
-  //   console.log(paginationData.selectedPage);
-  //   setIsLoading(true);
-  //   dispatch(
-  //     Lots.getLOTList({
-  //       pagination: paginationData.selectedPage,
-  //       size: 5,
-  //     })
-  //   );
-  //   setIsLoading(false);
-  // };
+  const fetchData = async () => {
+    setIsLoading(true);
+    const list = await dispatch(
+      LotActions.getLotList({
+        pagination: paginationData.selectedPage,
+        size: 5,
+      })
+    );
 
-  // console.log("*********** listOfLot **********");
-  // console.log(listOfLot?.length);
+    setLotList(list);
+
+
+    setIsLoading(false);
+  };
 
   const toggleDropdown = (itemId) => {
     setDropdownOpen(prevState => ({
@@ -115,6 +77,7 @@ export default function LotList() {
       [itemId]: !prevState[itemId] // Toggle dropdown state for the specific item
     }));
   };
+
   const handleOptionClick = (bill) => {
     // Handle option click for a specific item
     setIsBill(bill);
@@ -124,34 +87,14 @@ export default function LotList() {
   };
 
 
-  // let view = userList?.docs?.map((user, i) => (
-  //   <tr>
-  //     <td> {user.name}</td>
-  //     <td> {user.email}</td>
-  //     <td> {user.status}</td>
-  //     <td>{user.department}</td>
-  //     <td>
-  //       <Button
-  //         className="my-1"
-  //         color="primary"
-  //         onClick={() => {
-  //           updateUser(i, user.status);
-  //         }}
-  //         type="button"
-  //       >
-  //         {user.status == "active" ? "Deactivate" : "Activate"}
-  //       </Button>
-  //     </td>
-  //   </tr>
-  // ));
-  let view = lotListData?.map((lot, i) => (
+  let view = lotList?.docs?.map((lot, i) => (
     <tr key={i}>
-      <td> {lot.lotNumber}</td>
-      <td> {lot.shipperId}</td>
-      <td> {lot.wholeSellerId}</td>
-      <td> {lot.bankId}</td>
+      <td> {lot.product}</td>
+      <td> {lot.unitOfMeasure}</td>
+      <td> {lot.vendor}</td>
+      <td> {lot.agreementType}</td>
       <td>
-        <Dropdown isOpen={dropdownOpen[lot.lotNumber]} toggle={() => toggleDropdown(lot.lotNumber)}>
+        <Dropdown isOpen={dropdownOpen[lot.id]} toggle={() => toggleDropdown(lot.id)}>
           <DropdownToggle caret={false}>
             {/* Icon representing the menu */}
             <i className="fas fa-ellipsis-v"></i>
@@ -184,40 +127,36 @@ export default function LotList() {
       <Spinner type="grow" color="dark" />
     </div>
   );
-  if (isLoading) {
-    return (<>
-      <Card body></Card>
-    </>);
-  }
+
+
+  console.log("*********** listOfLot **********");
+  console.log(lotList?.length);
   return (
     <>
       <Card body>
-        <Table className="align-items-center table-flush"
-          responsive>
-          <thead className="thead-light">
-            <tr>
-              <th>Lot Number</th>
-              <th>Shipper Id</th>
-              <th>WholeSeller Id</th>
-              <th>Bank Id</th>
-              <th>Documents</th>
+        {
+          isLoading ?
+            <div className="row justify-content-center">
+              <ProgressBar />
+            </div> : lotList?.length !== 0 ?
+              <Table className="align-items-center table-flush"
+                responsive>
+                <thead className="thead-light">
+                  <tr>
+                    <th>Product</th>
+                    <th>Unit Of Measure</th>
+                    <th>Vendor</th>
+                    <th>agreementType</th>
+                    <th>Documents</th>
 
-              <th scope="col" />
-            </tr>
-          </thead>
-          <tbody>
-            {view}
-            {/* {lotList.map((item, index) => {
-              <tr key={index}>
-                <td>{item.lotNumber}</td>
-                <td>{item.shipperId}</td>
-                <td>{item.wholeSellerId}</td>
-                <td>{item.bankId}</td>
-              </tr>;
-            })} */}
-          </tbody>
-        </Table>
-
+                    <th scope="col" />
+                  </tr>
+                </thead>
+                <tbody>
+                  {view}
+                </tbody>
+              </Table> : <NoDataCard status={"Lot"} />
+        }
         <UploadPDF toggle={toggleModal} isBill={isBill} onNewClick={false} modal={modal} />
       </Card>
       <Container>
@@ -227,7 +166,7 @@ export default function LotList() {
           </Col>
         </Row>
       </Container>
-      {/* <ReactPaginate
+      <ReactPaginate
         previousLabel={"Previous"}
         nextLabel={"Next"}
         breakLabel={"..."}
@@ -239,92 +178,7 @@ export default function LotList() {
         containerClassName={"pagination"}
         subContainerClassName={"pages pagination"}
         activeClassName={"active"}
-      /> */}
+      />
     </>
   );
 }
-
-{/* <Card body>
-                {isLoading ? (
-                  <div className="row justify-content-center">
-                    <ProgressBar />{" "}
-                  </div>
-                ) : (
-                  <>
-                    {userList?.docs?.length ? (
-                      <>
-                        <Table
-                          className="align-items-center table-flush"
-                          responsive
-                        >
-                          <thead className="thead-light">
-                            <tr>
-                              <th>Username</th>
-                              <th>Email</th>
-                              <th scope="col">Status</th>
-                              <th scope="col">Department</th>
-                              <th scope="col">Action</th>
-
-                              <th scope="col" />
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {view}
-                            {userList.docs.map((item, index) => {
-                              <tr key={index}>
-                                <td>{item.Username}</td>
-                                <td>{item.Email}</td>
-                                <td>{item.Status}</td>
-                                <td>{item.Department}</td>
-                                <td>{item.Action}</td>
-                              </tr>;
-                            })}
-                          </tbody>
-                        </Table>
-                        <Container>
-                          <Row>
-                            <Col>
-                              <hr />
-                            </Col>
-                          </Row>
-                        </Container>
-
-                        <ReactPaginate
-                          previousLabel={"Previous"}
-                          nextLabel={"Next"}
-                          breakLabel={"..."}
-                          breakClassName={"break-me"}
-                          pageCount={pageCount}
-                          marginPagesDisplayed={3}
-                          pageRangeDisplayed={5}
-                          onPageChange={handlePageClick}
-                          containerClassName={"pagination"}
-                          subContainerClassName={"pages pagination"}
-                          activeClassName={"active"}
-                        /> */}
-{/* <div className="pagination">
-                          <button
-                            onClick={() => handlePageClick(currentPage - 1)}
-                            disabled={currentPage === 0}
-                          >
-                            Previous
-                          </button>
-                          <span>Page {currentPage + 1}</span>
-                          <button
-                            onClick={() => handlePageClick(currentPage + 1)}
-                            disabled={currentPage === pageCount - 1}
-                          >
-                            Next
-                          </button>
-                        </div> */}
-
-{/* <Items currentItems={1} /> */ }
-{/* </>
-                    ) : (
-                      <NoDataCard status={"Users"} />
-                    )}
-                  </>
-                )}
-              </Card> */}
-//   );
-// }

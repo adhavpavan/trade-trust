@@ -16,8 +16,7 @@ import AllContracts from './examples/AllContracts.js';
 
 import { useDispatch, useSelector } from 'react-redux'
 import * as UserAction from '../actions/user.jsx'
-// import LotList from './examples/LotList.js';
-import LotList from './examples/LotListWorking.js';
+import LotList from './examples/LotList.js';
 const axios = require('axios')
 const config = require('../helper/config.js')
 

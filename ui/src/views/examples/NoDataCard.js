@@ -3,7 +3,7 @@ import { Card, CardTitle, Button, CardText } from 'reactstrap'
 
 export default function NoDataCard(props) {
 
-    let message = props.status=="Users"? "No user list available for your organization" : "Org" ? 'No organization list available' : `We have no contract data found for ${props.status} status`
+    let message = props.status == "Users" ? "No user list available for your organization" : "Org" ? 'No organization list available' : "Lot" ? 'No lot list available' : `We have no contract data found for ${props.status} status`
     return (
         <div>
             <Card body inverse color="primary">
