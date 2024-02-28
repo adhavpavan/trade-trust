@@ -91,7 +91,7 @@ export default function LotList() {
     );
 
     setLotList(list);
-  
+
 
     setIsLoading(false);
   };
@@ -135,9 +135,9 @@ export default function LotList() {
 
   let view = lotList?.docs?.map((lot, i) => (
     <tr key={i}>
-      <td> {lot.vendor}</td>
-      <td> {lot.unitOfMeasure}</td>
       <td> {lot.product}</td>
+      <td> {lot.unitOfMeasure}</td>
+      <td> {lot.vendor}</td>
       <td> {lot.agreementType}</td>
       <td>
         <Dropdown isOpen={dropdownOpen[lot.id]} toggle={() => toggleDropdown(lot.id)}>
@@ -189,10 +189,10 @@ export default function LotList() {
               responsive>
               <thead className="thead-light">
                 <tr>
-                  <th>Lot Number</th>
-                  <th>Shipper Id</th>
-                  <th>WholeSeller Id</th>
-                  <th>Bank Id</th>
+                  <th>Product</th>
+                  <th>Unit Of Measure</th>
+                  <th>Vendor</th>
+                  <th>agreementType</th>
                   <th>Documents</th>
 
                   <th scope="col" />
