@@ -16,6 +16,8 @@ import AllContracts from './examples/AllContracts.js';
 
 import { useDispatch, useSelector } from 'react-redux'
 import * as UserAction from '../actions/user.jsx'
+// import LotList from './examples/LotList.js';
+import LotList from './examples/LotListWorking.js';
 const axios = require('axios')
 const config = require('../helper/config.js')
 
@@ -23,7 +25,7 @@ const config = require('../helper/config.js')
 export default function Index() {
   let history = useHistory()
 
-  const userData = useSelector((state)=> state?.User?.login?.decodedData)
+  const userData = useSelector((state) => state?.User?.login?.decodedData)
 
   const [activeTab, setActiveTab] = useState('1');
 
@@ -31,8 +33,8 @@ export default function Index() {
     if (activeTab !== tab) setActiveTab(tab);
   }
 
-  useEffect(()=> {
-    if(!userData){
+  useEffect(() => {
+    if (!userData) {
       history.push('auth/login');
     }
   }, [])
@@ -72,7 +74,7 @@ export default function Index() {
                       onClick={() => { selectActiveTab('1'); }}
                     >
                       Inprogress
-                                </NavLink>
+                    </NavLink>
                   </NavItem>
                   <NavItem>
                     <NavLink
@@ -80,7 +82,7 @@ export default function Index() {
                       onClick={() => { selectActiveTab('2'); }}
                     >
                       Active
-                                </NavLink>
+                    </NavLink>
                   </NavItem>
                   <NavItem>
                     <NavLink
@@ -88,15 +90,23 @@ export default function Index() {
                       onClick={() => { selectActiveTab('3'); }}
                     >
                       Expiring Sooon
-                                </NavLink>
+                    </NavLink>
                   </NavItem>
                   <NavItem>
                     <NavLink
                       className={classnames({ active: activeTab === '4' })}
                       onClick={() => { selectActiveTab('4'); }}
                     >
+                      Lots
+                    </NavLink>
+                  </NavItem>
+                  <NavItem>
+                    <NavLink
+                      className={classnames({ active: activeTab === '5' })}
+                      onClick={() => { selectActiveTab('5'); }}
+                    >
                       All
-                                </NavLink>
+                    </NavLink>
                   </NavItem>
                 </Nav>
 
@@ -131,17 +141,27 @@ export default function Index() {
                             </Col>
 
                           </Row>
-                        </TabPane> :
-                        <TabPane tabId="4">
+                        </TabPane> : activeTab == "4" ? <TabPane tabId="4">
                           <Row>
-                            <Col sm="12" style={{ paddingTop: 100 }}>
-                              <Card body>
-                                <AllContracts />
-                              </Card>
+                            <Col sm="12">
+                        
+                                <LotList />
+                                {/* <ExpiringContracts /> */}
+                         
                             </Col>
-
                           </Row>
                         </TabPane>
+                          :
+                          <TabPane tabId="5">
+                            <Row>
+                              <Col sm="12" style={{ paddingTop: 100 }}>
+                                <Card body>
+                                  <AllContracts />
+                                </Card>
+                              </Col>
+
+                            </Row>
+                          </TabPane>
                   }
                 </TabContent>
               </div>
