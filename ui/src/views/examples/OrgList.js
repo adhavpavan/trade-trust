@@ -39,17 +39,17 @@ export default function OrgList() {
     setPageCount(totalPages);
   }, [organizationState]);
 
-  const handlePageClick = (page) => {
+  const handlePageClick = async (page) => {
+    console.log("page clicked", page);
     setPaginationData({
-      ...paginationData,
+      // ...paginationData,
       selectedPage: page.selected,
+
     });
-    fetchData();
+    // await fetchData();
   };
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+
 
   const fetchData = async () => {
     setIsLoading(true);
@@ -61,7 +61,12 @@ export default function OrgList() {
     );
     setIsLoading(false);
   };
-
+  useEffect(() => {
+    fetchData();
+  }, []);
+  useEffect(() => {
+    fetchData();
+  }, [paginationData]);
   let view = orgList?.map((org, i) => (
     <tr key={i}>
       <td> {org.name}</td>
