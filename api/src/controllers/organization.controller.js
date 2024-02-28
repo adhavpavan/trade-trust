@@ -7,7 +7,8 @@ const { getSuccessResponse } = require('../utils/Response');
 
 const createOrganization = catchAsync(async (req, res) => {
   const org = await organizationService.createOrganization(req.body);
-  res.status(httpStatus.CREATED).send(org);
+  // res.status(httpStatus.CREATED).send(org);
+  res.status(httpStatus.CREATED).send(getSuccessResponse(httpStatus.CREATED, 'Organization created successfully', org));
 });
 
 const getOrganizations = catchAsync(async (req, res) => {
