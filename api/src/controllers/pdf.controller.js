@@ -2,7 +2,7 @@ const { extractTextFromPDF, extractAddresses, extractOrderDetails, extractProduc
 const catchAsync = require('../utils/catchAsync');
 const fs = require('fs');
 const { uploadFile, getDataHash } = require('../utils/fileUpload');
-const { DeliveryProof, Invoice, Bill } = require('../models');
+const { DeliveryProof, Invoice, Bill, Lot } = require('../models');
 const { getSuccessResponse } = require('../utils/Response');
 const httpStatus = require('http-status');
 
@@ -69,6 +69,8 @@ const parseInvoicePDF = catchAsync(async (req, res) => {
   console.log(fileMetaData);
 
   data.metaData = fileMetaData;
+  data.lotId = req.body.lotId;
+
 
   //save data to database
   const result = await Invoice.create(data);
@@ -98,6 +100,7 @@ const parseHouseBillPDF = catchAsync(async (req, res) => {
   console.log(fileMetadata);
 
   data.metaData = fileMetadata;
+  data.lotId = req.body.lotId;
 
   //save data to database
   const result = await Bill.create(data);

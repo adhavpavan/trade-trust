@@ -26,6 +26,7 @@ const invoiceSchema = mongoose.Schema({
     amountDue: { type: String, required: false },
     sn_sln: { type: String, required: false },
     metaData: { type: Object, required: false },
+    lotId: { type: String, required: false },
 });
 
 

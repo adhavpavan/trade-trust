@@ -41,6 +41,7 @@ const addressSchema = new mongoose.Schema({
     signatoryCompany: String,
     AuthorizedSignatory: String,
     metaData:  Object, 
+    lotId: String
   });
   
   
