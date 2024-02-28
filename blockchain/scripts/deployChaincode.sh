@@ -16,7 +16,7 @@ VERSION="1"
 SEQUENCE=1
 CC_SRC_PATH="../artifacts/chaincode/javascript"
 CC_NAME="agreement"
-CC_POLICY="OR('Org1MSP.peer','Org2MSP.peer')"
+CC_POLICY="OR('Org1MSP.peer')"
 
 packageChaincode() {
     rm -rf ${CC_NAME}.tar.gz
@@ -32,10 +32,6 @@ installChaincode() {
     setGlobals 1
     peer lifecycle chaincode install ${CC_NAME}.tar.gz
     echo "===================== Chaincode is installed on peer0.org1 ===================== "
-
-    setGlobals 2
-    peer lifecycle chaincode install ${CC_NAME}.tar.gz
-    echo "===================== Chaincode is installed on peer0.org2 ===================== "
 }
 
 # installChaincode
@@ -104,18 +100,6 @@ checkCommitReadyness() {
 # queryInstalled
 # approveForMyOrg2
 
-checkCommitReadyness() {
-
-    setGlobals 2
-    peer lifecycle chaincode checkcommitreadiness --channelID $CHANNEL_NAME \
-        --peerAddresses localhost:9051 --tlsRootCertFiles $PEER0_ORG2_CA \
-        --signature-policy ${CC_POLICY} \
-        --name ${CC_NAME} --version ${VERSION} --sequence ${SEQUENCE} --output json
-    echo "===================== checking commit readyness from org 1 ===================== "
-}
-
-# checkCommitReadyness
-
 
 commitChaincodeDefination() {
     setGlobals 1
@@ -124,7 +108,6 @@ commitChaincodeDefination() {
         --signature-policy ${CC_POLICY} \
         --channelID $CHANNEL_NAME --name ${CC_NAME} \
         --peerAddresses localhost:7051 --tlsRootCertFiles $PEER0_ORG1_CA \
-        --peerAddresses localhost:9051 --tlsRootCertFiles $PEER0_ORG2_CA \
         --version ${VERSION} --sequence ${SEQUENCE}
 }
 
@@ -148,7 +131,6 @@ chaincodeInvoke() {
         --cafile $ORDERER_CA \
         -C $CHANNEL_NAME -n ${CC_NAME}  \
         --peerAddresses localhost:7051 --tlsRootCertFiles $PEER0_ORG1_CA \
-        --peerAddresses localhost:9051 --tlsRootCertFiles $PEER0_ORG2_CA   \
         -c '{"function": "CreateContract","Args":["{\"id\":\"3\", \"test\":\"data\"}"]}'
 
 }
@@ -157,7 +139,7 @@ chaincodeInvoke() {
 
 
 chaincodeQuery() {
-    setGlobals 2
+    setGlobals 1
     peer chaincode query -C $CHANNEL_NAME -n ${CC_NAME} -c '{"function": "getAssetByID","Args":["2"]}'
 }
 
@@ -167,15 +149,13 @@ chaincodeQuery() {
 
 
 # Run this function if you add any new dependency in chaincode
-presetup
+# presetup
 
 packageChaincode
 installChaincode
 queryInstalled
 approveForMyOrg1
 checkCommitReadyness
-# approveForMyOrg2
-# checkCommitReadyness
 commitChaincodeDefination
 queryCommitted
 sleep 3
