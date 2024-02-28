@@ -11,7 +11,8 @@ const AddUser = (props) => {
     const {
         className,
         modal,
-        toggle
+        toggle,
+        isReset
     } = props;
 
     const { addToast } = useToasts();
@@ -20,8 +21,9 @@ const AddUser = (props) => {
 
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
+    const [department, setDepartment] = useState('financial')
     const [password, setPassword] = useState('')
-    const [isValidating, setIsValidating] = useState(false)
+    const [isValidating, setIsValidating] = useState(isReset)
     const dispatch = useDispatch();
     const userProfileData = useSelector(
         (state) => state?.User?.login?.decodedData
@@ -46,6 +48,13 @@ const AddUser = (props) => {
             })
             isInvalid = true
         }
+        if (department == '') {
+            addToast(`Please add organization type`, {
+                appearance: 'error',
+                autoDismiss: true,
+            })
+            isInvalid = true
+        }
         if (password == '') {
             addToast(`Please enter password`, {
                 appearance: 'error',
@@ -65,6 +74,7 @@ const AddUser = (props) => {
         setEmail('');
         setName('');
         setPassword('');
+        setDepartment('')
     };
 
 
@@ -74,7 +84,7 @@ const AddUser = (props) => {
             'name': name,
             'email': email,
             'password': password,
-            'department': 'financial',
+            'department': department,
             'orgId': userProfileData?.orgId
         }
         dispatch(UserAction.addUser(data)).then(() => {
@@ -95,6 +105,7 @@ const AddUser = (props) => {
     const inputChangeHandler = (value, fieldName) => {
         switch (fieldName) {
             case 'email': setEmail(value); break;
+            case 'department': setDepartment(value); break;
             case 'name': setName(value); break;
             case 'password': setPassword(value); break;
 
@@ -127,9 +138,20 @@ const AddUser = (props) => {
                                             <FormFeedback>*Required</FormFeedback>
                                         </Col>
                                     </FormGroup>
+                               
+                                    <FormGroup row>
+                                        <Label sm={2}>Department</Label>
+                                        <Col sm={10}>
+                                            <CustomInput type='select' invalid={isValidating && department == ''} onChange={e => { inputChangeHandler(e.target.value, 'department') }} >
+                                                <option value={'financial'}>Financial</option>
+                                                <option value={'legal'}>Legal</option>
+                                            </CustomInput>
+                                            <FormFeedback>*Required</FormFeedback>
+                                        </Col>
+                                    </FormGroup>
 
                                     <FormGroup row>
-                                        <Label sm={2}>Organization Name</Label>
+                                        <Label sm={2}>Password</Label>
                                         <Col sm={10}>
 
                                             <Input type="password" invalid={isValidating && password == ''} onChange={e => inputChangeHandler(e.target.value, 'password')} placeholder="Enter Password" />
