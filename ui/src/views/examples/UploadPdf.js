@@ -11,8 +11,9 @@ const UploadPDF = (props) => {
         className,
         modal,
         toggle,
-        isBill,
+        typeOfPDF,
         onNewClick,
+        lotId,
     } = props;
 
     const { addToast } = useToasts();
@@ -28,9 +29,7 @@ const UploadPDF = (props) => {
     }, [decodedData])
 
 
-    const [name, setName] = useState('')
-    const [bill, setBill] = useState('')
-    const [invoice, setInvoice] = useState('')
+    const [pdfToUpload, setPDF] = useState('')
     const [isValidating, setIsValidating] = useState(onNewClick)
 
     const getFile = (e) => {
@@ -40,7 +39,7 @@ const UploadPDF = (props) => {
         if (file) {
             reader.readAsDataURL(file);
             reader.onloadend = () => {
-                isBill ? setBill(file) : setInvoice(file);
+                setPDF(file);
             };
         }
     };
@@ -51,22 +50,8 @@ const UploadPDF = (props) => {
 
         setIsValidating(true)
 
-        if (name === '') {
-            addToast(`Please name`, {
-                appearance: 'error',
-                autoDismiss: true,
-            })
-            isInvalid = true
-        }
-        if (isBill && bill === '') {
-            addToast(`Please upload bill`, {
-                appearance: 'error',
-                autoDismiss: true,
-            })
-            isInvalid = true
-        }
-        if (!isBill && invoice === '') {
-            addToast(`Please upload invoice`, {
+        if (pdfToUpload === '') {
+            addToast(`Please upload ${typeOfPDF}`, {
                 appearance: 'error',
                 autoDismiss: true,
             })
@@ -81,30 +66,22 @@ const UploadPDF = (props) => {
 
 
     const resetInput = () => {
-        setName('');
-        setBill('');
-        setInvoice('');
+        setPDF('');
+        // setInvoice('');
         setIsValidating(false);
     };
 
 
     const uploadBill = () => {
-        console.log("Here****************");
-
-        // const data = new FormData()
-        // data.append('name', orgName)
-
         setLoading(true);
         const formData = new FormData();
-        if (bill !== '') {
-            formData.append('pdf', bill);
-        } else {
-            formData.append('pdf', invoice);
-        }
+        formData.append('pdf', pdfToUpload);
+        formData.append('lotId', lotId);
 
-        if (isBill) {
+
+        if (pdfToUpload === 'Bill') {
             dispatch(PDFActions.uplodBill(formData)).then(() => {
-                addToast(`Bill uploaded successfully`, {
+                addToast(`${typeOfPDF} uploaded successfully`, {
                     appearance: 'success',
                     autoDismiss: true,
                 });
@@ -115,10 +92,10 @@ const UploadPDF = (props) => {
                 resetInput()
                 setIsValidating(false)
             })
-        } else {
+        } else if (pdfToUpload === 'Invoice') {
 
             dispatch(PDFActions.uplodInvoice(formData)).then(() => {
-                addToast(`Invoice uploaded successfully`, {
+                addToast(`${typeOfPDF} uploaded successfully`, {
                     appearance: 'success',
                     autoDismiss: true,
                 });
@@ -129,6 +106,21 @@ const UploadPDF = (props) => {
                 resetInput()
                 setIsValidating(false)
             })
+        } else {
+
+            dispatch(PDFActions.uplodDeliveryProof(formData)).then(() => {
+                addToast(`${typeOfPDF} uploaded successfully`, {
+                    appearance: 'success',
+                    autoDismiss: true,
+                });
+                toggle();
+            }).catch((error) => {
+                alert(error)
+            }).finally(() => {
+                resetInput()
+                setIsValidating(false)
+            })
+
         }
         setLoading(false);
     }
@@ -136,9 +128,7 @@ const UploadPDF = (props) => {
 
     const inputChangeHandler = (value, fieldName) => {
         switch (fieldName) {
-            case 'name': setName(value); break;
-            case 'bill': setBill(value); break;
-            case 'invoice': setInvoice(value); break;
+            case 'pdfToUpload': setPDF(value); break;
 
             default:
                 break;
@@ -148,58 +138,20 @@ const UploadPDF = (props) => {
     return (
         <div>
             <Modal isOpen={modal} toggle={toggle} className={className} size={'lg'}>
-                <ModalHeader toggle={toggle}>{isBill ? 'Upload Bill' : 'Upload Invoice'}</ModalHeader>
+                <ModalHeader toggle={toggle}>Upload {typeOfPDF}</ModalHeader>
                 {isLoading ? <ProgressBar /> :
                     (<>
 
                         <Card className="bg-secondary  px-md-2">
                             <ModalBody>
-                                <FormGroup row>
-                                    <Label sm={2}>Name</Label>
-                                    <Col sm={10}>
-                                        <Input type="text" invalid={isValidating && name == ''} onChange={e => { inputChangeHandler(e.target.value, 'name') }} placeholder="Enter name" />
-                                        <FormFeedback>*Required</FormFeedback>
-                                    </Col>
-                                </FormGroup>
                                 <Form>
-                                    {/* <FormGroup> */}
-                                    {/* <Dropdown isOpen={dropdownOpen1} toggle={toggle1}>
-                  <DropdownToggle caret>
-                    {selectedOption || "Select an option"}
-                  </DropdownToggle>
-                  <DropdownMenu>
-                    <DropdownItem
-                      onClick={() => handleDropdownItemClick("Org 1")}
-                    >
-                      Org 1
-                    </DropdownItem>
-                    <DropdownItem
-                      onClick={() => handleDropdownItemClick("Org 2")}
-                    >
-                      Org 2
-                    </DropdownItem>
-                  </DropdownMenu>
-                </Dropdown>
-              </FormGroup> */}
 
                                     <FormGroup row>
-                                        {
-                                            isBill ? <>
-                                                <Label sm={2}>Bill</Label>
-                                            </> : <>
-                                                <Label sm={2}>Invoice</Label>
-                                            </>
-                                        }
+                                        <Label sm={2}>{typeOfPDF}</Label>
                                         <Col sm={9}>
-                                            {
-                                                isBill ?
-                                                    <>
-                                                        <CustomInput invalid={isValidating && bill == ''} type="file" accept=".pdf, .PDF" onChange={e => { getFile(e) }} id="exampleCustomFileBrowser" name="customFile" />
-                                                    </> :
-                                                    <>
-                                                        <CustomInput invalid={isValidating && invoice == ''} type="file" accept=".pdf, .PDF" onChange={e => { getFile(e) }} id="exampleCustomFileBrowser" name="customFile" />
-                                                    </>
-                                            }
+
+                                            <CustomInput invalid={isValidating && pdfToUpload == ''} type="file" accept=".pdf, .PDF" onChange={e => { getFile(e) }} id="exampleCustomFileBrowser" name="customFile" />
+
                                             <FormFeedback>*Required</FormFeedback>
                                         </Col>
                                     </FormGroup>
@@ -208,7 +160,7 @@ const UploadPDF = (props) => {
                         </Card>
 
                         <ModalFooter>
-                            <Button color="primary" onClick={() => { validateAndUploadBill() }}>Submit {isBill ? 'Bill' : 'Invoice'}</Button>{' '}
+                            <Button color="primary" onClick={() => { validateAndUploadBill() }}>Submit {typeOfPDF}</Button>{' '}
                             <Button color="secondary" onClick={() => {
                                 resetInput();
                                 toggle();

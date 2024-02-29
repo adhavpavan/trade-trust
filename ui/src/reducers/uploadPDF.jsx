@@ -11,6 +11,9 @@ const initialBillDataState = {
     shipperReference: '',
     carrierReference: '',
 };
+const initialProofDataState = {
+    id: '',
+};
 
 function uplodInvoice(state = initialInvoiceDataState, action) {
     switch (action.type) {
@@ -57,10 +60,27 @@ function uplodBill(state = initialBillDataState, action) {
     }
 }
 
+function uplodDeliveryProof(state = initialProofDataState, action) {
+    switch (action.type) {
+        case PDFActions.END_UPLOAD_PROOF:
+            if (action.error) {
+                // Handle error state
+                return state;
+            }
+            return {
+                ...state,
+                id: action.payload.id
+            };
+        default:
+            return state;
+    }
+}
+
 
 const PDFData = combineReducers({
     invoiceData: uplodInvoice,
     billData: uplodBill,
+    proofData: uplodDeliveryProof,
     isLoading: getIsLoading
 });
 

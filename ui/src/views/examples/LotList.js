@@ -13,12 +13,13 @@ import {
   Spinner,
   Row,
   Col,
-  Dropdown,
+  Dropdown, Button,
 } from "reactstrap";
 import { useDispatch, useSelector } from "react-redux";
 import * as LotActions from "../../actions/lot";
 import UploadPDF from "./UploadPdf";
 import NoDataCard from "./NoDataCard";
+import ViewLot from "./ViewLot";
 
 export default function LotList() {
 
@@ -33,12 +34,16 @@ export default function LotList() {
   const [paginationData, setPaginationData] = useState({ selectedPage: 0 });
   const [isLoading, setIsLoading] = useState(false)
   const [dropdownOpen, setDropdownOpen] = useState({});
-  const [isBill, setIsBill] = useState(true);
+  const [pdfType, setTypeOfPDF] = useState('');
+  const [lotId, setlotId] = useState(0);
   const [pageCount, setPageCount] = useState([]);
 
+  const userData = useSelector((state) => state?.User?.login?.decodedData);
   const [modal, setModal] = useState(false);
+  const [modalView, setModalView] = useState(false);
 
   const toggleModal = () => setModal(!modal);
+  const toggleViewModal = () => setModalView(!modalView);
 
   useEffect(() => {
     setPageCount(totalPages);
@@ -78,10 +83,11 @@ export default function LotList() {
     }));
   };
 
-  const handleOptionClick = (bill) => {
+  const handleOptionClick = (typeOfDoc, itemId) => {
     // Handle option click for a specific item
-    setIsBill(bill);
-    console.log(`Option ${isBill}`);
+    setTypeOfPDF(typeOfDoc);
+    setlotId(itemId);
+    console.log(`Option ${pdfType}`);
     toggleModal();
 
   };
@@ -99,18 +105,46 @@ export default function LotList() {
             {/* Icon representing the menu */}
             <i className="fas fa-ellipsis-v"></i>
           </DropdownToggle>
-          <DropdownMenu>
-            {/* Menu items */}
-            <DropdownItem onClick={(e) => {
-              e.preventDefault();
-              handleOptionClick(true);
-            }}>Uplod Bill</DropdownItem>
-            <DropdownItem onClick={(e) => {
-              e.preventDefault();
-              handleOptionClick(false);
-            }}>Uplod Invoice</DropdownItem>
+          <DropdownMenu>{
+            userData?.orgId === 3 || userData?.orgId === 4 ?
+              <>
+                <DropdownItem onClick={(e) => {
+                  e.preventDefault();
+                  handleOptionClick('Bill', lot.id);
+                }}>Uplod Bill</DropdownItem>
+              </>
+              : userData?.orgId === 5 ? <>
+                <DropdownItem onClick={(e) => {
+                  e.preventDefault();
+                  handleOptionClick('Invoice', lot.id);
+                }}>Uplod Invoice</DropdownItem></> : userData?.orgId === 1 || userData?.orgId === 2 ?
+                <>
+                  {/* Menu items */}
+                  <DropdownItem onClick={(e) => {
+                    e.preventDefault();
+                    handleOptionClick('Bill', lot.id);
+                  }}>Uplod Bill</DropdownItem>
+                  <DropdownItem onClick={(e) => {
+                    e.preventDefault();
+                    handleOptionClick('Invoice', lot.id);
+                  }}>Uplod Invoice</DropdownItem>
+                  <DropdownItem onClick={(e) => {
+                    e.preventDefault();
+                    handleOptionClick('Proof Of Delivery', lot.id);
+                  }}>Uplod Proof Of Delivery</DropdownItem></> : <></>
+          }
           </DropdownMenu>
         </Dropdown>
+      </td>
+      <td>
+        <Button
+          className="my-1"
+          color="primary"
+          onClick={toggleViewModal}
+          type="button"
+        >
+          View
+        </Button>
       </td>
     </tr>
   ));
@@ -129,8 +163,6 @@ export default function LotList() {
   );
 
 
-  console.log("*********** listOfLot **********");
-  console.log(lotList?.length);
   return (
     <>
       <Card body>
@@ -148,7 +180,7 @@ export default function LotList() {
                     <th>Vendor</th>
                     <th>agreementType</th>
                     <th>Documents</th>
-
+                    <th></th>
                     <th scope="col" />
                   </tr>
                 </thead>
@@ -157,7 +189,8 @@ export default function LotList() {
                 </tbody>
               </Table> : <NoDataCard status={"Lot"} />
         }
-        <UploadPDF toggle={toggleModal} isBill={isBill} onNewClick={false} modal={modal} />
+        <UploadPDF toggle={toggleModal} typeOfPDF={pdfType} onNewClick={false} modal={modal} lotId={lotId} />
+        <ViewLot toggle={toggleViewModal} modal={modalView} lotId={lotId} />
       </Card>
       <Container>
         <Row>

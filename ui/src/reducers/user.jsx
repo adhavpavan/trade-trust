@@ -22,28 +22,29 @@ function getIsLoading(state = false, action) {
 function getUsers(state = initialUserListState, action) {
   switch (action.type) {
     case UserActions.END_GET_USERS:
-      console.log("===============reducer==========================",action)
-      if(action.error){
+      console.log("===============reducer==========================", action)
+      if (action.error) {
         throw action.error
       }
-      return action.payload  || state;
+      return action.payload || state;
     default:
       return state;
   }
 }
 
-function login(state= {}, action){
+function login(state = {}, action) {
   switch (action.type) {
     case UserActions.END_USER_LOGIN:
-      console.log("===============reducer==========================",action)
-      if(action.error){
+      console.log("===============reducer==========================", action)
+      if (action.error) {
         throw action.error
       }
       localStorage.setItem('token', action?.payload?.access?.token)
+      console.log(action?.payload?.access?.token);
       // var decoded = jwt_decode(action?.payload?.access?.token);
-      action.payload.decodedData =jwt_decode(action?.payload?.access?.token);
+      action.payload.decodedData = jwt_decode(action?.payload?.access?.token);
       return action?.payload
-  
+
     default:
       return state;
   }
@@ -53,10 +54,10 @@ function login(state= {}, action){
 //   switch (action.type) {
 //     // case UserActions.END_GET_USERS:
 //     //     return action.payload || state
-      
+
 //     case UserActions.END_GET_USERS:
 //       return action.payload || state
-  
+
 //     default:
 //       return state
 //   }

@@ -73,8 +73,6 @@ export default function OrgList() {
       <td> {org.type}</td>
     </tr>
   ));
-  console.log("*********************");
-  console.log(orgList?.length);
 
   return (
     <div>

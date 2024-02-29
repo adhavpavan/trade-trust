@@ -9,6 +9,9 @@ export const END_UPLOAD_BILL = `END_UPLOAD_BILL`;
 export const START_UPLOAD_INVOICE = `START_UPLOAD_INVOICE`;
 export const END_UPLOAD_INVOICE = `END_UPLOAD_INVOICE`;
 
+export const START_UPLOAD_PROOF = `START_UPLOAD_PROOF`;
+export const END_UPLOAD_PROOF = `END_UPLOAD_PROOF`;
+
 export const START_ADD_LOTS = `START_ADD_LOTS`;
 export const END_ADD_LOTS = `END_ADD_LOTS`;
 
@@ -72,6 +75,37 @@ export function uplodInvoice(data) {
                 if (err.response) {
                     console.log("action ======================error-------------------------------------==================", JSON.stringify(err.response))
                     dispatch(createAction(END_UPLOAD_INVOICE, null, err.response.data))
+                    throw err.response.data.message.toString()
+
+                } else if (err.request) {
+                    // The request was made but no response was received
+                    console.log(err.request);
+                } else {
+                    // Something happened in setting up the request that triggered an Error
+                    console.log('Error', err.message);
+                }
+            })
+    }
+}
+
+
+export function uplodDeliveryProof(data) {
+    return async dispatch => {
+
+        dispatch(createAction(START_UPLOAD_PROOF));
+        return Api.post(`/v1/pdf/extract/delivery_proof`, data, headers())
+            .then(resp => {
+                dispatch(createAction(END_LOADING))
+                console.log("action : getting response Upload csv ======================resp==================", resp)
+                if (resp && resp.data) {
+                    dispatch(createAction(END_UPLOAD_PROOF, resp.data))
+                }
+            }).catch(err => {
+                dispatch(createAction(END_LOADING))
+
+                if (err.response) {
+                    console.log("action ======================error-------------------------------------==================", JSON.stringify(err.response))
+                    dispatch(createAction(END_UPLOAD_PROOF, null, err.response.data))
                     throw err.response.data.message.toString()
 
                 } else if (err.request) {
