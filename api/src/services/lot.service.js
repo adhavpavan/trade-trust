@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { User } = require('../models');
+const { User, Invoice, Bill } = require('../models');
 const ApiError = require('../utils/ApiError');
 const { registerUser } = require('../utils/blockchainUtils');
 const Lot = require('../models/lot.model.js');
@@ -35,7 +35,29 @@ const queryLots = async (filter, options) => {
  * @returns {Promise<Lot>}
  */
 const getLotById = async (id) => {
-  return Lot.findById(id);
+  // return Lot.findById(id)
+  //   .populate('bills')
+  //   .populate('invoices')
+  //   .exec()
+  console.log(id)
+  const lot = await Lot.findById(id)
+  console.log("lot", lot)
+
+  // if(!lot) {
+    // throw new ApiError(httpStatus.NOT_FOUND, 'Lot not found')
+  // }
+  
+  const invoices = await Invoice.find({lotId: id})
+  const bills = await Bill.find({lotId: id})
+  // const bills = await lot.populate('bills').execPopulate()
+const result = {
+  ...lot.toJSON(),
+  invoices,
+  bills
+}
+  return result;
+
+
 };
 
 

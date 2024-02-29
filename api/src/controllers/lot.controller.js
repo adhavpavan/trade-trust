@@ -71,11 +71,11 @@ const getLots = catchAsync(async (req, res) => {
 });
 
 const getLot = catchAsync(async (req, res) => {
-  const user = await lotService.getLotById(req.params.orgId);
-  if (!user) {
+  const lot = await lotService.getLotById(req.params.lotId);
+  if (!lot) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Lot not found');
   }
-  res.status(httpStatus.OK).send(getSuccessResponse(httpStatus.OK, 'Lot fetched successfully', user));
+  res.status(httpStatus.OK).send(getSuccessResponse(httpStatus.OK, 'Lot fetched successfully', lot));
 });
 
 
