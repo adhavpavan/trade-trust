@@ -17,6 +17,7 @@ import AllContracts from './examples/AllContracts.js';
 import { useDispatch, useSelector } from 'react-redux'
 import * as UserAction from '../actions/user.jsx'
 import LotList from './examples/LotList.js';
+import AddLot from './examples/AddLot.js';
 const axios = require('axios')
 const config = require('../helper/config.js')
 
@@ -56,14 +57,13 @@ export default function Index() {
                 <FormGroup row>
 
                   <Col sm={9}>
-                    <h3 className="mb-0">Contract List</h3>
+                    <h3 className="mb-0">Lot List</h3>
                   </Col>
                   <Col sm={3}>
-                    <Button className="my-1" color="primary" onClick={toggleModal} type="button">{"Add New Contract"}</Button>
+                    <Button className="my-1" color="primary" onClick={toggleModal} type="button">{"Add Lot"}</Button>
                   </Col>
                 </FormGroup>
-
-                <AddContract toggle={toggleModal} modal={modal} />
+                <AddLot toggle={toggleModal} modal={modal} />
               </CardHeader>
               <div>
                 <Nav tabs>
@@ -72,39 +72,7 @@ export default function Index() {
                       className={classnames({ active: activeTab === '1' })}
                       onClick={() => { selectActiveTab('1'); }}
                     >
-                      Inprogress
-                    </NavLink>
-                  </NavItem>
-                  <NavItem>
-                    <NavLink
-                      className={classnames({ active: activeTab === '2' })}
-                      onClick={() => { selectActiveTab('2'); }}
-                    >
-                      Active
-                    </NavLink>
-                  </NavItem>
-                  <NavItem>
-                    <NavLink
-                      className={classnames({ active: activeTab === '3' })}
-                      onClick={() => { selectActiveTab('3'); }}
-                    >
-                      Expiring Sooon
-                    </NavLink>
-                  </NavItem>
-                  <NavItem>
-                    <NavLink
-                      className={classnames({ active: activeTab === '4' })}
-                      onClick={() => { selectActiveTab('4'); }}
-                    >
                       Lots
-                    </NavLink>
-                  </NavItem>
-                  <NavItem>
-                    <NavLink
-                      className={classnames({ active: activeTab === '5' })}
-                      onClick={() => { selectActiveTab('5'); }}
-                    >
-                      All
                     </NavLink>
                   </NavItem>
                 </Nav>
@@ -114,53 +82,21 @@ export default function Index() {
                   {activeTab == "1" ?
                     <TabPane tabId="1">
                       <Row>
+                        <Col sm="12">
+
+                          <LotList />
+                          {/* <ExpiringContracts /> */}
+
+                        </Col>
+                      </Row>
+                      {/* <Row>
                         <Col sm="12" style={{ paddingTop: 100 }}>
                           <Card body>
                             <InProgressContract />
                           </Card>
                         </Col>
-                      </Row>
-                    </TabPane> : activeTab == "2" ?
-                      <TabPane tabId="2">
-                        <Row>
-                          <Col sm="12" style={{ paddingTop: 100 }}>
-                            <Card body>
-                              <CompletedContract />
-                            </Card>
-                          </Col>
-
-                        </Row>
-                      </TabPane> : activeTab == "3" ?
-                        <TabPane tabId="3">
-                          <Row>
-                            <Col sm="12" style={{ paddingTop: 100 }}>
-                              <Card body>
-                                <ExpiringContracts />
-                              </Card>
-                            </Col>
-
-                          </Row>
-                        </TabPane> : activeTab == "4" ? <TabPane tabId="4">
-                          <Row>
-                            <Col sm="12">
-                        
-                                <LotList />
-                                {/* <ExpiringContracts /> */}
-                         
-                            </Col>
-                          </Row>
-                        </TabPane>
-                          :
-                          <TabPane tabId="5">
-                            <Row>
-                              <Col sm="12" style={{ paddingTop: 100 }}>
-                                <Card body>
-                                  <AllContracts />
-                                </Card>
-                              </Col>
-
-                            </Row>
-                          </TabPane>
+                      </Row> */}
+                    </TabPane> : <></>
                   }
                 </TabContent>
               </div>

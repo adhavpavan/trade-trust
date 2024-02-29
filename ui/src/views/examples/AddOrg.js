@@ -79,7 +79,8 @@ const AddOrg = (props) => {
             });
             toggle();
         }).catch((error) => {
-            alert(error)
+            alert(error);
+            toggle();
         }).finally(() => {
             resetInput()
             setIsValidating(false)
