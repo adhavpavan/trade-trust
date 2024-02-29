@@ -2,9 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, FormFeedback, Card, Form, FormGroup, Label, Input, Col, CustomInput } from 'reactstrap';
 import ProgressBar from './ProgressBar'
 import { useToasts } from 'react-toast-notifications'
-import { getTimeStamp } from '../../helper/utils'
 import { useDispatch, useSelector } from 'react-redux';
-
 const ViewLot = (props) => {
     const {
         className,
@@ -15,7 +13,6 @@ const ViewLot = (props) => {
 
     const { addToast } = useToasts();
     const dispatch = useDispatch();
-    // const isLoading = useSelector((state) => state.PDFData.isLoading);
     const [isLoading, setLoading] = useState(false);
     const decodedData = useSelector(
         (state) => state?.User?.login?.decodedData
