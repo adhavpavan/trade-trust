@@ -40,7 +40,6 @@ function login(state = {}, action) {
         throw action.error
       }
       localStorage.setItem('token', action?.payload?.access?.token)
-      console.log(action?.payload?.access?.token);
       // var decoded = jwt_decode(action?.payload?.access?.token);
       action.payload.decodedData = jwt_decode(action?.payload?.access?.token);
       return action?.payload

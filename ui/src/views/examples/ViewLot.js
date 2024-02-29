@@ -19,7 +19,6 @@ const ViewLot = (props) => {
     );
 
     useEffect(() => {
-        console.log("-----------------qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq----------------------", decodedData)
     }, [decodedData])
 
 

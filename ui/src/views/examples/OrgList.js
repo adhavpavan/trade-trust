@@ -40,7 +40,6 @@ export default function OrgList() {
   }, [organizationState]);
 
   const handlePageClick = async (page) => {
-    console.log("page clicked", page);
     setPaginationData({
       // ...paginationData,
       selectedPage: page.selected,

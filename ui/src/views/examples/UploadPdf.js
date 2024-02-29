@@ -25,7 +25,6 @@ const UploadPDF = (props) => {
     );
 
     useEffect(() => {
-        console.log("-----------------qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq----------------------", decodedData)
     }, [decodedData])
 
 
