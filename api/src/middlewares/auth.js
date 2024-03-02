@@ -38,7 +38,36 @@ const adminAuth = catchAsync(async(req, res, next) => {
   } catch (error) {
     throw new ApiError(httpStatus.UNAUTHORIZED, error.message)
   }
-  if(decodedData.type !== USER_TYPE.ADMIN){
+  const userType = [
+    USER_TYPE.ADMIN,
+     USER_TYPE.SUPER_ADMIN
+  ]
+  if(!userType.includes(decodedData.type)){
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'You are not authorized to perform this operation')
+  }
+ 
+  req.loggerInfo = {
+    user: {
+      id: decodedData?.email,
+      email: decodedData?.email,
+      orgId: parseInt(decodedData?.orgId),
+      department: decodedData?.department
+    },
+  };
+  return next();
+});
+const superAdminAuth = catchAsync(async(req, res, next) => {
+  const token = req?.headers?.authorization?.split(' ')[1];
+  if (!token) {
+    return res.status(httpStatus.UNAUTHORIZED).send(getErrorResponse(httpStatus.UNAUTHORIZED, 'Missing token in request'));
+  }
+  let decodedData;
+  try {
+    decodedData = jwt.verify(token, config.jwt.secret);
+  } catch (error) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, error.message)
+  }
+  if(decodedData.type !== USER_TYPE.SUPER_ADMIN){
     throw new ApiError(httpStatus.UNAUTHORIZED, 'You are not authorized to perform this operation')
   }
  
@@ -56,4 +85,5 @@ const adminAuth = catchAsync(async(req, res, next) => {
 module.exports = {
   auth,
   adminAuth,
+  superAdminAuth
 };

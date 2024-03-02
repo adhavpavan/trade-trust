@@ -90,7 +90,7 @@ const ingestBootstrapData = async () => {
         orgId: user.orgId,
         password: user.password,
         status: USER_STATUS.ACTIVE,
-
+        type: user.type,
         department: user.department,
       });
       try {

@@ -121,7 +121,7 @@ const AddOrg = (props) => {
                                         <Col sm={10}>
                                             <CustomInput type='select' invalid={isValidating && orgType == ''} onChange={e => { inputChangeHandler(e.target.value, 'type') }} >
                                                 <option value={'transporter'}>Transporter</option>
-                                                <option value={'banker'}>Banker</option>
+                                                <option value={'bank'}>Bank</option>
                                                 <option value={'exporter'}>Exporter</option>
                                                 <option value={'DTP'}>DTP</option>
                                                 <option value={'wholseller'}>Wholseller</option>

@@ -43,7 +43,8 @@ class Sidebar extends React.Component {
   // const userData = useSelector((state) => state?.User?.login?.decodedData);
   console.log("===============11111===========userData===========", userData)
     let newRoute= routes.filter(route => route.path != "/login" && route.path != "/register")
-    if(userData?.type != 'admin'){
+    const adminTypes= ['admin', 'super-admin']
+    if(!adminTypes.includes(userData?.type)){
       newRoute = newRoute.filter(route => route.name != "Admin")
     }
     return newRoute.map((prop, key) => {

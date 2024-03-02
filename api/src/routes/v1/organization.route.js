@@ -1,5 +1,5 @@
 const express = require('express');
-const {auth, adminAuth} = require('../../middlewares/auth');
+const {auth, adminAuth, superAdminAuth} = require('../../middlewares/auth');
 const validate = require('../../middlewares/validate');
 const { organizationValidation } = require('../../validations');
 const { organizationController } = require('../../controllers');
@@ -19,7 +19,7 @@ const router = express.Router();
 
 router
   .route('/')
-  .post(adminAuth, validate(organizationValidation.createOrganization), organizationController.createOrganization)
+  .post(superAdminAuth, validate(organizationValidation.createOrganization), organizationController.createOrganization)
   .get(adminAuth, validate(organizationValidation.getOrganization), organizationController.getOrganizations)
 
 router
