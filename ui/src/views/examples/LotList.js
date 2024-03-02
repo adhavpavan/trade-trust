@@ -43,7 +43,11 @@ export default function LotList() {
   const [modalView, setModalView] = useState(false);
 
   const toggleModal = () => setModal(!modal);
-  const toggleViewModal = () => setModalView(!modalView);
+  const toggleViewModal = (lotId_) => {
+    console.log("lotId_", lotId_);
+    setlotId(lotId_)
+    setModalView(!modalView)
+  };
 
   useEffect(() => {
     setPageCount(totalPages);
@@ -91,7 +95,15 @@ export default function LotList() {
     toggleModal();
 
   };
+  const menuOptions = [
 
+    { /* DTP */ orgIds: [1], options: ['Bill', 'Invoice', 'ProofOfDelivery'] },
+    { /* Exporter */ orgIds: [2], options: ['Bill', 'Invoice', 'ProofOfDelivery'] },
+    { /* Bank/Transporter */ orgIds: [3, 4], options: ['eBL'] },
+    { /* Wholesaler */ orgIds: [5], options: ['Invoice'] }
+  ];
+
+  console.log('---userData---', userData);
 
   let view = lotList?.docs?.map((lot, i) => (
     <tr key={i}>
@@ -105,34 +117,16 @@ export default function LotList() {
             {/* Icon representing the menu */}
             <i className="fas fa-ellipsis-v"></i>
           </DropdownToggle>
-          <DropdownMenu>{
-            userData?.orgId === 3 || userData?.orgId === 4 ?
-              <>
-                <DropdownItem onClick={(e) => {
+          <DropdownMenu>
+            {userData && menuOptions.map(optionSet => (
+              optionSet.orgIds.includes(userData.orgId) &&
+              optionSet.options.map(option => (
+                <DropdownItem key={option} onClick={(e) => {
                   e.preventDefault();
-                  handleOptionClick('Bill', lot.id);
-                }}>Uplod Bill</DropdownItem>
-              </>
-              : userData?.orgId === 5 ? <>
-                <DropdownItem onClick={(e) => {
-                  e.preventDefault();
-                  handleOptionClick('Invoice', lot.id);
-                }}>Uplod Invoice</DropdownItem></> : userData?.orgId === 1 || userData?.orgId === 2 ?
-                <>
-                  {/* Menu items */}
-                  <DropdownItem onClick={(e) => {
-                    e.preventDefault();
-                    handleOptionClick('Bill', lot.id);
-                  }}>Uplod Bill</DropdownItem>
-                  <DropdownItem onClick={(e) => {
-                    e.preventDefault();
-                    handleOptionClick('Invoice', lot.id);
-                  }}>Uplod Invoice</DropdownItem>
-                  <DropdownItem onClick={(e) => {
-                    e.preventDefault();
-                    handleOptionClick('Proof Of Delivery', lot.id);
-                  }}>Uplod Proof Of Delivery</DropdownItem></> : <></>
-          }
+                  handleOptionClick(option, lot.id);
+                }}>Upload {option}</DropdownItem>
+              ))
+            ))}
           </DropdownMenu>
         </Dropdown>
       </td>
@@ -140,7 +134,7 @@ export default function LotList() {
         <Button
           className="my-1"
           color="primary"
-          onClick={toggleViewModal}
+          onClick={() => toggleViewModal(lot.id)}
           type="button"
         >
           View

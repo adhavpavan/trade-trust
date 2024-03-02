@@ -15,7 +15,7 @@ const initialProofDataState = {
     id: '',
 };
 
-function uplodInvoice(state = initialInvoiceDataState, action) {
+function uploadInvoice(state = initialInvoiceDataState, action) {
     switch (action.type) {
         case PDFActions.END_UPLOAD_INVOICE:
             if (action.error) {
@@ -43,7 +43,7 @@ function getIsLoading(state = false, action) {
     }
 }
 
-function uplodBill(state = initialBillDataState, action) {
+function uploadBill(state = initialBillDataState, action) {
     switch (action.type) {
         case PDFActions.END_UPLOAD_BILL:
             if (action.error) {
@@ -60,7 +60,7 @@ function uplodBill(state = initialBillDataState, action) {
     }
 }
 
-function uplodDeliveryProof(state = initialProofDataState, action) {
+function uploadDeliveryProof(state = initialProofDataState, action) {
     switch (action.type) {
         case PDFActions.END_UPLOAD_PROOF:
             if (action.error) {
@@ -78,9 +78,9 @@ function uplodDeliveryProof(state = initialProofDataState, action) {
 
 
 const PDFData = combineReducers({
-    invoiceData: uplodInvoice,
-    billData: uplodBill,
-    proofData: uplodDeliveryProof,
+    invoiceData: uploadInvoice,
+    billData: uploadBill,
+    proofData: uploadDeliveryProof,
     isLoading: getIsLoading
 });
 

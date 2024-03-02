@@ -188,7 +188,7 @@ const AddLot = (props) => {
         LotAction.startLoading();
         const formData = new FormData();
         formData.append('xls', csvFile);
-        formData.append('data', JSON.stringify({ "bankerId": selectedBank, "wholesellerid": selectedWholeSaler, "transporterId": selectedShipper }));
+        formData.append('data', JSON.stringify({ "bankerId": selectedBank, "wholesalerId": selectedWholeSaler, "transporterId": selectedShipper }));
 
         dispatch(LotAction.uploadCSV(formData)).then(() => {
             addToast(`Lot created successfully`, {

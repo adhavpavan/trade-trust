@@ -78,49 +78,57 @@ const UploadPDF = (props) => {
         formData.append('lotId', lotId);
 
 
-        if (pdfToUpload === 'Bill') {
-            dispatch(PDFActions.uplodBill(formData)).then(() => {
-                addToast(`${typeOfPDF} uploaded successfully`, {
-                    appearance: 'success',
-                    autoDismiss: true,
-                });
-                toggle();
-            }).catch((error) => {
-                alert(error)
-            }).finally(() => {
-                resetInput()
-                setIsValidating(false)
-            })
-        } else if (pdfToUpload === 'Invoice') {
+        switch (typeOfPDF) {
+            case 'Bill':
+                dispatch(PDFActions.uploadBill(formData)).then(() => {
+                    addToast(`${typeOfPDF} uploaded successfully`, {
+                        appearance: 'success',
+                        autoDismiss: true,
+                    });
+                    toggle();
+                }).catch((error) => {
+                    alert(error)
+                }).finally(() => {
+                    resetInput()
+                    setIsValidating(false)
+                })
+                break;
 
-            dispatch(PDFActions.uplodInvoice(formData)).then(() => {
-                addToast(`${typeOfPDF} uploaded successfully`, {
-                    appearance: 'success',
-                    autoDismiss: true,
-                });
-                toggle();
-            }).catch((error) => {
-                alert(error)
-            }).finally(() => {
-                resetInput()
-                setIsValidating(false)
-            })
-        } else {
+            case 'Invoice':
+                dispatch(PDFActions.uploadInvoice(formData)).then(() => {
+                    addToast(`${typeOfPDF} uploaded successfully`, {
+                        appearance: 'success',
+                        autoDismiss: true,
+                    });
+                    toggle();
+                }).catch((error) => {
+                    alert(error)
+                }).finally(() => {
+                    resetInput()
+                    setIsValidating(false)
+                })
+                break;
 
-            dispatch(PDFActions.uplodDeliveryProof(formData)).then(() => {
-                addToast(`${typeOfPDF} uploaded successfully`, {
-                    appearance: 'success',
-                    autoDismiss: true,
-                });
-                toggle();
-            }).catch((error) => {
-                alert(error)
-            }).finally(() => {
-                resetInput()
-                setIsValidating(false)
-            })
+            case 'ProofOfDelivery':
+                dispatch(PDFActions.uploadDeliveryProof(formData)).then(() => {
+                    addToast(`${typeOfPDF} uploaded successfully`, {
+                        appearance: 'success',
+                        autoDismiss: true,
+                    });
+                    toggle();
+                }).catch((error) => {
+                    alert(error)
+                }).finally(() => {
+                    resetInput()
+                    setIsValidating(false)
+                })
+                break;
 
+            default:
+            // default case
+            console.log('Invalid type of PDF');
         }
+
         setLoading(false);
     }
 

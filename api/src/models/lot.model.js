@@ -7,14 +7,15 @@ const lotSchema = mongoose.Schema({
     //from xls
     vendor: { type: String, required: false },
     deadlineDate: { type: Date, required: false },
-    orderingDate: { type: Date, required: false },
+    orderDate: { type: Date, required: false },
     agreementType: { type: String, required: false },
     product: { type: String, required: false },
     qty: { type: Number, required: false },
     price: { type: String, required: false },
     confirmQty: { type: Number, required: false },
     tax: { type: Number, required: false },
-    unitOfMeasure: { type: String, required: false },
+    unit: { type: String, required: false },
+    tax: { type: Number, required: false },
     shipperReferenceId: { type: String, required: false },
 
     //from request body

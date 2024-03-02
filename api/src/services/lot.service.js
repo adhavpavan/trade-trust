@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { User, Invoice, Bill } = require('../models');
+const { User, Invoice, Bill, DeliveryProof } = require('../models');
 const ApiError = require('../utils/ApiError');
 const { registerUser } = require('../utils/blockchainUtils');
 const Lot = require('../models/lot.model.js');
@@ -49,11 +49,13 @@ const getLotById = async (id) => {
   
   const invoices = await Invoice.find({lotId: id})
   const bills = await Bill.find({lotId: id})
+  const PODs = await DeliveryProof.find({lotId: id})
   // const bills = await lot.populate('bills').execPopulate()
 const result = {
   ...lot.toJSON(),
   invoices,
-  bills
+  bills,
+  PODs
 }
   return result;
 

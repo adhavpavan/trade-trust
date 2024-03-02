@@ -27,7 +27,7 @@ export const endLoading = () => createAction(END_LOADING)
 
 
 
-export function uplodBill(data) {
+export function uploadBill(data) {
     return async dispatch => {
 
         dispatch(createAction(START_UPLOAD_BILL));
@@ -58,7 +58,7 @@ export function uplodBill(data) {
 }
 
 
-export function uplodInvoice(data) {
+export function uploadInvoice(data) {
     return async dispatch => {
 
         dispatch(createAction(START_UPLOAD_INVOICE));
@@ -89,7 +89,7 @@ export function uplodInvoice(data) {
 }
 
 
-export function uplodDeliveryProof(data) {
+export function uploadDeliveryProof(data) {
     return async dispatch => {
 
         dispatch(createAction(START_UPLOAD_PROOF));

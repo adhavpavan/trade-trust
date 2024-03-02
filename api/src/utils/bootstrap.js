@@ -9,13 +9,19 @@ const ingestBootstrapData = async () => {
 
 
 
- 
+
   const staticOrgData = [
     { name: 'DTP', id: 1, parentId: 1, type: ORG_TYPE.DTP },
-    { name: 'Exporter 1', id: 2, parentId: 1, type: ORG_TYPE.EXPORTER },
-    { name: 'Bank', id: 3, parentId: 1, type: ORG_TYPE.BANK },
-    { name: 'Transporter', id: 4, parentId: 1, type:ORG_TYPE.TRANSPORTER },
-    { name: 'Wholesaler', id: 5, parentId: 1, type:ORG_TYPE.WHOLESALER },
+    { name: 'Exporter #1', id: 2, parentId: 1, type: ORG_TYPE.EXPORTER },
+    { name: 'Bank #1', id: 3, parentId: 1, type: ORG_TYPE.BANK },
+    { name: 'Transporter #1', id: 4, parentId: 1, type: ORG_TYPE.TRANSPORTER },
+    { name: 'Wholesaler #1', id: 5, parentId: 1, type: ORG_TYPE.WHOLESALER },
+    /**
+     *  Exporter(id:2) all three (Invoice, eBL, ProofOfDelivery)
+     *  Bank(id:3)        Only eBL
+     *  Transporter(id:4) Only eBL
+     *  Wholesaler(id:5)  Only Invoice 
+     * */
 
   ];
   const staticUser = [
@@ -35,7 +41,7 @@ const ingestBootstrapData = async () => {
       bcOrg: 1,
       password: config.commonPassword,
       department: ORG_DEPARTMENT.LEGAL,
-      type: USER_TYPE.SUPER_ADMIN,
+      type: USER_TYPE.ADMIN,
     },
     {
       name: 'User 2',
@@ -72,7 +78,7 @@ const ingestBootstrapData = async () => {
       let o = new Organization(org);
       await o.save();
 
-      
+
       console.log('Ingesting static org data', org.name);
     } else {
       console.log('organization already exist', org.name);
@@ -98,6 +104,7 @@ const ingestBootstrapData = async () => {
         let secret = await registerUser(`org${user.orgId}`, user.email);
         newUser.secret = secret
         newUser.isVerified = true
+        newUser.orgType = staticOrgData?.find(o => o.id === user.orgId)?.type ?? 'default'
       } catch (error) {
 
       }

@@ -41,6 +41,7 @@ const userSchema = mongoose.Schema(
     status: { type: String, default: USER_STATUS.INACTIVE },
     type: { type: String, default: USER_TYPE.USER },
     orgId: { type: Number },
+    orgType: { type: String },
     bcOrg:{ type: Number },
 
     department: { type: String },

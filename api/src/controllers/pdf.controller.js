@@ -35,6 +35,7 @@ const parseDeliveryProofPDF = catchAsync(async (req, res) => {
   console.log(fileMetadata);
 
   data.metaData = fileMetadata;
+  data.lotId = req.body.lotId;
 
   //save data to database
   const result = await DeliveryProof.create(data);
