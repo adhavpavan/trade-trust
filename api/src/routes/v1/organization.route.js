@@ -21,6 +21,10 @@ router
   .route('/')
   .post(adminAuth, validate(organizationValidation.createOrganization), organizationController.createOrganization)
   .get(adminAuth, validate(organizationValidation.getOrganization), organizationController.getOrganizations)
+
+router
+  .route('/type')
+  .get(adminAuth, organizationController.getOrganizations)  
 //add route for /search?name=
 router
  .route('/search')

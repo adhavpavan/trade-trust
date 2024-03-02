@@ -46,7 +46,7 @@ export function getLotList(data) {
 }
 
 
-export function uplodCSV(data) {
+export function uploadCSV(data) {
     return dispatch => {
 
         dispatch(createAction(START_UPLOAD_CSV));

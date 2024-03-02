@@ -34,13 +34,16 @@ router
     auth, 
     validate(lotValidation.getLot), lotController.getLots)
 
+   
   router
   .route('/:lotId')
   .get(
     auth,
     // validate(lotValidation.getLotByID),
     lotController.getLot
-  )
+  );
+
+
 
 module.exports = router;
 

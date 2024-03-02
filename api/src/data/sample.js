@@ -12,7 +12,7 @@ let lotTransaction = {
   exporterId:"",
   shipperIdId:"",
   bankId:"",
-  wholeSellerId:"",
+  wholesalerId:"",
 
   exporterReference:"",
   transporterReferance:"",
@@ -39,7 +39,7 @@ let billOfLading = {
   eBLNumber:"",
   exporterId:"",
   lotNumber:"1234",
-  wholeSellerId:"",
+  wholesalerId:"",
   exporterReference:"",
   transporterReferance:"",
   consignee:"Test",
@@ -60,7 +60,7 @@ let invoice= {
   doctType:"INVOICE",
   exporterReference:"",
   exporterId:"",
-  wholeSellerId:"",
+  wholesalerId:"",
   items:[{
     productName:"",
     quantity:"",
@@ -72,7 +72,7 @@ let invoice= {
 let pod = {
   exporterReference:"",
   exporterId:"",
-  wholeSellerId:"",
+  wholesalerId:"",
   shippingDate:"",
   productName:"",
   lotNumber:"",

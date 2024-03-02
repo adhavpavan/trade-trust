@@ -17,7 +17,7 @@ let lotTransaction = {
   exporterId:"",//default populate
   shipperId:"",
   bankId:"",
-  wholeSellerId:"",
+  wholesalerId:"",
 
   // transporterReferance:"",
 
@@ -33,7 +33,7 @@ let billOfLading = {
   shipperReference:"P00059",//----------ForeignKey-----------------
 
   exporterId:"",
-  wholeSellerId:"",
+  wholesalerId:"",
   consignee:"Test",
   doc:{
     id:"",
@@ -53,7 +53,7 @@ let invoice= {
   shipperReference:"", //----------ForeignKey-----------------
 
   exporterId:"",
-  wholeSellerId:"",
+  wholesalerId:"",
 
   items:[{
     productName:"",
@@ -68,7 +68,7 @@ let invoice= {
 let pod = {
   shipperReference:"S00082", //----------ForeignKey-----------------
   exporterId:"",
-  wholeSellerId:"",
+  wholesalerId:"",
   shippingDate:"",
   productName:"",
   lotNumber:"",

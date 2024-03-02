@@ -17,7 +17,7 @@
 //     //from request body
 //     exporterId: '',
 //     bankId: '',
-//     wholeSellerId: '',
+//     wholesalerId: '',
 //     transporterId: '',
 
 //     //for internal use only
@@ -60,7 +60,7 @@
 //                 //from request body
 //                 exporterId: action.payload.exporterId,
 //                 bankId: action.payload.bankId,
-//                 wholeSellerId: action.payload.wholeSellerId,
+//                 wholesalerId: action.payload.wholesalerId,
 //                 transporterId: action.payload.transporterId,
 
 //                 //for internal use only

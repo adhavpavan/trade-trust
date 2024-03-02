@@ -4,6 +4,7 @@ const catchAsync = require('../utils/catchAsync');
 const { userService, organizationService } = require('../services');
 const { getPagination } = require('../utils/pagination');
 const { getSuccessResponse } = require('../utils/Response');
+const { Organization } = require('../models');
 
 const createOrganization = catchAsync(async (req, res) => {
   const org = await organizationService.createOrganization(req.body);
@@ -12,20 +13,56 @@ const createOrganization = catchAsync(async (req, res) => {
 });
 
 const getOrganizations = catchAsync(async (req, res) => {
-  const { page, size } = req.query;
+  const { page, size, typeWise } = req.query;
+  console.log('-----page is----', page);
+  console.log('-----size is----', size);
+  console.log('-----typeWise is----', typeWise);
   const { limit, offset } = getPagination(page, size);
 
   let filter = {
-    parentId: parseInt(req.loggerInfo.user.orgId),
+    // parentId: parseInt(req.loggerInfo.user.orgId),
   };
   console.log('------orgid is---', filter);
 
   const options = { offset, limit };
   console.log('---optipns is---', options);
 
-  const result = await organizationService.queryOrganizations(
+  let result = await organizationService.queryOrganizations(
     filter, options
-     );
+  );
+
+  // {
+  //   "docs": [
+  //       {
+  //           "id": "65df114025e79a53c1c1b84f",
+  //           "name": "Wholeseller",
+  //           "type": "Wholeseller"  
+  //           "parentId": 1
+  //       }
+  //   ],
+  // }
+
+  if (typeWise) {
+    console.log('type wise filter applied');
+    // make result grouped  by type
+    result = await Organization.aggregate([
+      {
+        $group: {
+          _id: "$type", // Field to group by
+          organizations: { $push: { _id: "$_id", name: "$name" } }, // Push only required fields into the array
+        }
+      },
+      {
+        $project: {
+          _id: 0, // Exclude _id field
+          type: "$_id", // Rename _id to type
+          organizations: 1 // Include organizations array
+        }
+      }
+    ]).exec();
+
+  }
+
   res.status(httpStatus.OK).send(getSuccessResponse(httpStatus.OK, 'Organizations fetched successfully', result));
 });
 
@@ -46,7 +83,7 @@ const getOrganizationsByName = catchAsync(async (req, res) => {
 });
 
 module.exports = {
- createOrganization,
+  createOrganization,
   getOrganizations,
   getOrganization,
   getOrganizationsByName,

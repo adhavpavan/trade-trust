@@ -26,27 +26,27 @@ const createLot = catchAsync(async (req, res) => {
   //   .getJsonFromCsv(req.file.path);
 
   let lot = await csvTOJSON(req.file.path);
-  
-   const {data} = req.body;
-   const metaData = JSON.parse(data);
- 
-   
-   let finalLotData = [];
-   lot.forEach(l => {
-     const lotData = {
-       ...l,
-       ...metaData,
-       exporterId: req.loggerInfo.user.orgId,
-       docType: 'Lot',
-     }
-     finalLotData.push(lotData)
- 
-   })
-   console.log("-----finalLotData is-----", finalLotData);
-   const result = await lotService.createLot(finalLotData);
-   //delete file from server
-   fs.unlinkSync(req.file.path);
-   res.status(httpStatus.CREATED).send(getSuccessResponse(httpStatus.CREATED, 'Lot created successfully', result));
+
+  const { data } = req.body;
+  const metaData = JSON.parse(data);
+
+
+  let finalLotData = [];
+  lot.forEach(l => {
+    const lotData = {
+      ...l,
+      ...metaData,
+      exporterId: req.loggerInfo.user.orgId,
+      docType: 'Lot',
+    }
+    finalLotData.push(lotData)
+
+  })
+  console.log("-----finalLotData is-----", finalLotData);
+  const result = await lotService.createLot(finalLotData);
+  //delete file from server
+  fs.unlinkSync(req.file.path);
+  res.status(httpStatus.CREATED).send(getSuccessResponse(httpStatus.CREATED, 'Lot created successfully', result));
 
 
 
@@ -79,8 +79,9 @@ const getLot = catchAsync(async (req, res) => {
 });
 
 
+
 module.exports = {
   createLot,
   getLots,
-  getLot,
+  getLot
 };

@@ -1,4 +1,4 @@
-
+// @ts-check
 
 const USER_STATUS = {
   ACTIVE: 'active',
@@ -41,11 +41,13 @@ const ORG_DEPARTMENT = {
   FINANCIAL: 'financial'
 }
 
+
 const ORG_TYPE = {
+  DTP: 'dtp',
   EXPORTER: 'exporter',
-  TRANSPORTER: 'Transporter',
-  Bank:'bank',
-  WHOLESELLER:'wholeseller'
+  TRANSPORTER: 'transporter',
+  BANK:'bank',
+  WHOLESALER:'wholesaler'
 }
 
 

@@ -57,7 +57,7 @@ const ViewLot = (props) => {
                                         </Col>
                                     </FormGroup>
                                     <FormGroup row>
-                                        <Label sm={2} >WholeSeller Id</Label>
+                                        <Label sm={2} >Wholesaler Id</Label>
                                         <Col sm={10}>
                                             <Input disabled={true} />
 
