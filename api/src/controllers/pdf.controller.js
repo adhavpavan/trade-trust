@@ -44,6 +44,9 @@ const parseDeliveryProofPDF = catchAsync(async (req, res) => {
 
   let { user } = req.loggerInfo;
   let orgName = `org${user.orgId}`;
+
+  let gateway;
+  let client
   
   const contract = await getContractObject(
     orgName,
@@ -97,6 +100,9 @@ const parseInvoicePDF = catchAsync(async (req, res) => {
   let { user } = req.loggerInfo;
   let orgName = `org${user.orgId}`;
 
+  let gateway;
+  let client
+
   const contract = await getContractObject(
     orgName,
     user.email,
@@ -142,6 +148,9 @@ const parseHouseBillPDF = catchAsync(async (req, res) => {
 
   let { user } = req.loggerInfo;
   let orgName = `org${user.orgId}`;
+
+  let gateway;
+  let client
 
   const contract = await getContractObject(
     orgName,
