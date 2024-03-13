@@ -40,7 +40,10 @@ const parseDeliveryProofPDF = catchAsync(async (req, res) => {
   data.lotId = req.body.lotId;
 
   //save data to database
-  const result = await DeliveryProof.create(data);
+  let  result = await DeliveryProof.create(data);
+
+  result =JSON.parse(JSON.stringify(result))
+  result.id =  result.id || result._id
 
   let { user } = req.loggerInfo;
   let orgName = `org${user.orgId}`;
@@ -56,7 +59,7 @@ const parseDeliveryProofPDF = catchAsync(async (req, res) => {
     gateway,
     client
   );
-  result.id =  result._id
+  // result.id =  result._id
   result.docType = BLOCKCHAIN_DOC_TYPE.POD
   await  contract.submitTransaction('CreateAsset', JSON.stringify(result));
 
@@ -94,8 +97,9 @@ const parseInvoicePDF = catchAsync(async (req, res) => {
 
 
   //save data to database
-  const result = await Invoice.create(data);
-
+  let result = await Invoice.create(data);
+  result =JSON.parse(JSON.stringify(result))
+  result.id =  result.id || result._id
 
   let { user } = req.loggerInfo;
   let orgName = `org${user.orgId}`;
@@ -111,7 +115,7 @@ const parseInvoicePDF = catchAsync(async (req, res) => {
     gateway,
     client
   );
-  result.id =  result._id
+  // result.id =  result._id
   result.docType = BLOCKCHAIN_DOC_TYPE.INVOICE
   await  contract.submitTransaction('CreateAsset', JSON.stringify(result));
 
@@ -143,7 +147,12 @@ const parseHouseBillPDF = catchAsync(async (req, res) => {
   data.lotId = req.body.lotId;
 
   //save data to database
-  const result = await Bill.create(data);
+  let result = await Bill.create(data);
+
+  console.log("------------EBL response---------", typeof result,result)
+
+  result =JSON.parse(JSON.stringify(result))
+  result.id =  result.id || result._id
 
 
   let { user } = req.loggerInfo;
@@ -160,7 +169,6 @@ const parseHouseBillPDF = catchAsync(async (req, res) => {
     gateway,
     client
   );
-  result.id =  result._id
   result.docType = BLOCKCHAIN_DOC_TYPE.EBL
   await  contract.submitTransaction('CreateAsset', JSON.stringify(result));
   // return response
