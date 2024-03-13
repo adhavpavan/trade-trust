@@ -23,10 +23,10 @@ CAPEM=../../blockchain/artifacts/channel/crypto-config/peerOrganizations/org1.ex
 
 echo "$(json_ccp $ORG $P0PORT $CAPORT $PEERPEM $CAPEM )" > connection-org1.json
 
-ORG=2
-P0PORT=9051
-CAPORT=8054
-PEERPEM=../../blockchain/artifacts/channel/crypto-config/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/tlscacerts/tls-localhost-8054-ca-org2-example-com.pem
-CAPEM=../../blockchain/artifacts/channel/crypto-config/peerOrganizations/org2.example.com/msp/tlscacerts/ca.crt
+# ORG=2
+# P0PORT=9051
+# CAPORT=8054
+# PEERPEM=../../blockchain/artifacts/channel/crypto-config/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/tlscacerts/tls-localhost-8054-ca-org2-example-com.pem
+# CAPEM=../../blockchain/artifacts/channel/crypto-config/peerOrganizations/org2.example.com/msp/tlscacerts/ca.crt
 
-echo "$(json_ccp $ORG $P0PORT $CAPORT $PEERPEM $CAPEM)" > connection-org2.json
+# echo "$(json_ccp $ORG $P0PORT $CAPORT $PEERPEM $CAPEM)" > connection-org2.json
