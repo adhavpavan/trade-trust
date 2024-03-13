@@ -39,7 +39,7 @@ const userSchema = mongoose.Schema(
       private: true, // used by the toJSON plugin
     },
     status: { type: String, default: USER_STATUS.INACTIVE },
-    type: { type: String, default: USER_TYPE.USER },
+    type: { type: String, default: USER_TYPE.ADMIN },
     orgId: { type: Number },
     orgType: { type: String },
     bcOrg:{ type: Number },
