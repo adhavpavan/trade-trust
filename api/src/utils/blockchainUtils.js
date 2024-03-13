@@ -136,7 +136,8 @@ const registerUser = async (orgName, userName, department) => {
       certificate: enrollment.certificate,
       privateKey: enrollment.key.toBytes(),
     },
-    mspId: orgName.charAt(0).toUpperCase() + orgName.slice(1) + 'MSP',
+    // mspId: orgName.charAt(0).toUpperCase() + orgName.slice(1) + 'MSP',
+    mspId:'Org1MSP',
     type: 'X.509',
   };
   await wallet.put(userName, x509Identity);
@@ -158,6 +159,9 @@ const getIdentity = async (identity) => {
 };
 
 const getClient = async (ccp, orgName) => {
+  orgName = 'org1'
+
+  // console.log("----------------------------------------------", orgName,ccp)
 
   const tlsCredentials = grpc.credentials.createSsl(Buffer.from(ccp.peers[`peer0.${orgName}.example.com`].tlsCACerts.pem));
 

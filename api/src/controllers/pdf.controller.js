@@ -5,6 +5,8 @@ const { uploadFile, getDataHash } = require('../utils/fileUpload');
 const { DeliveryProof, Invoice, Bill, Lot } = require('../models');
 const { getSuccessResponse } = require('../utils/Response');
 const httpStatus = require('http-status');
+const { getContractObject } = require('../utils/blockchainUtils');
+const { NETWORK_ARTIFACTS_DEFAULT, BLOCKCHAIN_DOC_TYPE } = require('../utils/Constants');
 
 
 const parseDeliveryProofPDF = catchAsync(async (req, res) => {
@@ -30,8 +32,8 @@ const parseDeliveryProofPDF = catchAsync(async (req, res) => {
     mimetype: 'application/pdf',
     path: req.file.path,
   };
-  const orgName = req.loggerInfo?.user.orgName ?? 'default_org';
-  const fileMetadata = await uploadFile(file, orgName);
+  const org = req.loggerInfo?.user.orgName ?? 'default_org';
+  const fileMetadata = await uploadFile(file, org);
   console.log(fileMetadata);
 
   data.metaData = fileMetadata;
@@ -39,6 +41,21 @@ const parseDeliveryProofPDF = catchAsync(async (req, res) => {
 
   //save data to database
   const result = await DeliveryProof.create(data);
+
+  let { user } = req.loggerInfo;
+  let orgName = `org${user.orgId}`;
+  
+  const contract = await getContractObject(
+    orgName,
+    user.email,
+    NETWORK_ARTIFACTS_DEFAULT.CHANNEL_NAME,
+    NETWORK_ARTIFACTS_DEFAULT.CHAINCODE_NAME,
+    gateway,
+    client
+  );
+  result.id =  result._id
+  result.docType = BLOCKCHAIN_DOC_TYPE.POD
+  await  contract.submitTransaction('CreateAsset', JSON.stringify(result));
 
 
   // delete the file
@@ -65,8 +82,8 @@ const parseInvoicePDF = catchAsync(async (req, res) => {
     mimetype: 'application/pdf',
     path: req.file.path,
   };
-  const orgName = req.loggerInfo?.user.orgName ?? 'default_org';
-  const fileMetaData = await uploadFile(file, orgName);
+  const org = req.loggerInfo?.user.orgName ?? 'default_org';
+  const fileMetaData = await uploadFile(file, org);
   console.log(fileMetaData);
 
   data.metaData = fileMetaData;
@@ -75,6 +92,22 @@ const parseInvoicePDF = catchAsync(async (req, res) => {
 
   //save data to database
   const result = await Invoice.create(data);
+
+
+  let { user } = req.loggerInfo;
+  let orgName = `org${user.orgId}`;
+
+  const contract = await getContractObject(
+    orgName,
+    user.email,
+    NETWORK_ARTIFACTS_DEFAULT.CHANNEL_NAME,
+    NETWORK_ARTIFACTS_DEFAULT.CHAINCODE_NAME,
+    gateway,
+    client
+  );
+  result.id =  result._id
+  result.docType = BLOCKCHAIN_DOC_TYPE.INVOICE
+  await  contract.submitTransaction('CreateAsset', JSON.stringify(result));
 
 
 
@@ -96,8 +129,8 @@ const parseHouseBillPDF = catchAsync(async (req, res) => {
     mimetype: 'application/pdf',
     path: req.file.path,
   };
-  const orgName = req.loggerInfo?.user.orgName ?? 'default_org';
-  const fileMetadata = await uploadFile(file, orgName);
+  const org = req.loggerInfo?.user.orgName ?? 'default_org';
+  const fileMetadata = await uploadFile(file, org);
   console.log(fileMetadata);
 
   data.metaData = fileMetadata;
@@ -105,6 +138,23 @@ const parseHouseBillPDF = catchAsync(async (req, res) => {
 
   //save data to database
   const result = await Bill.create(data);
+
+
+  let { user } = req.loggerInfo;
+  let orgName = `org${user.orgId}`;
+
+  const contract = await getContractObject(
+    orgName,
+    user.email,
+    NETWORK_ARTIFACTS_DEFAULT.CHANNEL_NAME,
+    NETWORK_ARTIFACTS_DEFAULT.CHAINCODE_NAME,
+    gateway,
+    client
+  );
+  result.id =  result._id
+  result.docType = BLOCKCHAIN_DOC_TYPE.EBL
+  await  contract.submitTransaction('CreateAsset', JSON.stringify(result));
+  // return response
 
   //delete the file
   fs.unlinkSync(req.file.path);

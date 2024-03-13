@@ -27,7 +27,7 @@ const ingestBootstrapData = async () => {
   const staticUser = [
     {
       name: 'user 1',
-      email: 'admin911@gmail.com',
+      email: 'admin1211@gmail.com',
       orgId: 1,
       bcOrg: 1,
       password: config.commonPassword,
@@ -36,7 +36,7 @@ const ingestBootstrapData = async () => {
     },
     {
       name: 'user 1',
-      email: 'admin900@gmail.com',
+      email: 'admin1200@gmail.com',
       orgId: 2,
       bcOrg: 1,
       password: config.commonPassword,
@@ -45,7 +45,7 @@ const ingestBootstrapData = async () => {
     },
     {
       name: 'User 2',
-      email: 'admin901@gmail.com',
+      email: 'admin1201@gmail.com',
       orgId: 3,
       bcOrg: 1,
       password: config.commonPassword,
@@ -54,7 +54,7 @@ const ingestBootstrapData = async () => {
     },
     {
       name: 'User 3',
-      email: 'admin902@gmail.com',
+      email: 'admin1202@gmail.com',
       orgId: 4,
       bcOrg: 1,
       password: config.commonPassword,
@@ -63,7 +63,7 @@ const ingestBootstrapData = async () => {
     },
     {
       name: 'User 4',
-      email: 'admin903@gmail.com',
+      email: 'admin1203@gmail.com',
       orgId: 5,
       bcOrg: 1,
       password: config.commonPassword,

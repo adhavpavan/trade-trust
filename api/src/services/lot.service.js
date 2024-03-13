@@ -1,19 +1,46 @@
 const httpStatus = require('http-status');
 const { User, Invoice, Bill, DeliveryProof } = require('../models');
 const ApiError = require('../utils/ApiError');
-const { registerUser } = require('../utils/blockchainUtils');
+const { registerUser, getContractObject } = require('../utils/blockchainUtils');
 const Lot = require('../models/lot.model.js');
+const { NETWORK_ARTIFACTS_DEFAULT, BLOCKCHAIN_DOC_TYPE } = require('../utils/Constants');
 
 /**
  * Create an lot
  * @param {Object} lotBody
  * @returns {Promise<User>}
  */
-const createLot = async (lotBody) => {
+const createLot = async (lotBody, user) => {
   // if (await Lot.isEmailTaken(userBody.email)) {
   //   throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
   // }
-  return Lot.create(lotBody);
+
+  let orgName = `org${user.orgId}`;
+  let response = await Lot.create(lotBody);
+  console.log("-------------------------response is ---------------", response)
+  let gateway;
+  let client
+
+  const contract = await getContractObject(
+    orgName,
+    user.email,
+    NETWORK_ARTIFACTS_DEFAULT.CHANNEL_NAME,
+    NETWORK_ARTIFACTS_DEFAULT.CHAINCODE_NAME,
+    gateway,
+    client
+  ); 
+  if(response?.length){
+
+    for(let lot of response){
+      lot.id =  lot._id
+      lot.docType = BLOCKCHAIN_DOC_TYPE.LOT
+      
+      await  contract.submitTransaction('CreateAsset', JSON.stringify(lot));
+      console.log("lot  added successfully on blockchain", lot)
+      
+    }
+  }
+  return response
 };
 
 /**

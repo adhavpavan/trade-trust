@@ -16,7 +16,7 @@ const csvTOJSON = require('../utils/csvToJSON');
 
 const createLot = catchAsync(async (req, res) => {
 
-
+  let { user } = req.loggerInfo;
 
 
   // const lot = csvToJson
@@ -43,7 +43,7 @@ const createLot = catchAsync(async (req, res) => {
 
   })
   console.log("-----finalLotData is-----", finalLotData);
-  const result = await lotService.createLot(finalLotData);
+  const result = await lotService.createLot(finalLotData, user);
   //delete file from server
   fs.unlinkSync(req.file.path);
   res.status(httpStatus.CREATED).send(getSuccessResponse(httpStatus.CREATED, 'Lot created successfully', result));

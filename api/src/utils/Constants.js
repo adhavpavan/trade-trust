@@ -19,7 +19,11 @@ const ORG_DEFAULT_USER = {
 const BLOCKCHAIN_DOC_TYPE = {
   AGREEMENT: 'agreement',
   APPROVAL: 'approval',
-  DOCUMENT: 'document'
+  DOCUMENT: 'document',
+  LOT:'lot',
+  EBL:'ebl',
+  INVOICE:'invoice',
+  POD:'pod'
 }
 
 const FILTER_TYPE = {
