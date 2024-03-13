@@ -11,28 +11,28 @@ const upload = multer({ dest: 'uploads/' });
 router
   .route('/extract/delivery_proof')
   .post(
-    // adminAuth,
+    adminAuth,
     upload.single('pdf'),
      pdfController.parseDeliveryProofPDF);
 
 router
     .route('/extract/invoice')
     .post(
-      // adminAuth,
+      adminAuth,
       upload.single('pdf'),
       pdfController.parseInvoicePDF);
 
 router
     .route('/extract/house_bill')
     .post(
-      // adminAuth,
+      adminAuth,
       upload.single('pdf'),
       pdfController.parseHouseBillPDF);
 
 router
 .route('/verify_eBill/:id')
 .post(
-  // adminAuth,
+  adminAuth,
   upload.single('pdf'),
   pdfController.verifyEBill);
   
