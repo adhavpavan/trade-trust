@@ -79,7 +79,7 @@ const getLotById = async (id) => {
   const PODs = await DeliveryProof.find({lotId: id})
   // const bills = await lot.populate('bills').execPopulate()
 const result = {
-  ...lot.toJSON(),
+  ...lot?.toJSON(),
   invoices,
   bills,
   PODs

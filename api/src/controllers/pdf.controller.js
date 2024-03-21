@@ -182,13 +182,13 @@ const parseHouseBillPDF = catchAsync(async (req, res) => {
 const verifyEBill = catchAsync(async (req, res) => {
   // get hash for the file
   const fileData = fs.readFileSync(req.file.path);
-  let dataHash = getDataHash(fileData);
+  let dataHash = await getDataHash(fileData);
   console.log("-----dataHash is-----", dataHash);
 
   const billId = req.params.id;
   const bill = await Bill.findById(billId);
 
-  console.log("-----bill hash is-----", bill.metaData.contentHash);
+  console.log("-----bill hash is-----", bill?.metaData?.contentHash);
 
   if (!bill) {
     return res.status(httpStatus.NOT_FOUND).send(getSuccessResponse(httpStatus.NOT_FOUND, 'Bill not found', {}));

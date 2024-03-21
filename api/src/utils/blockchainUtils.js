@@ -101,7 +101,7 @@ const registerUser = async (orgName, userName, department) => {
     console.log('Admin Enrolled Successfully', adminIdentity);
   }
 
-  const provider = wallet.getProviderRegistry().getProvider(adminIdentity.type);
+  const provider = wallet.getProviderRegistry().getProvider(adminIdentity?.type);
   const adminUser = await provider.getUserContext(adminIdentity, 'admin');
   let secret;
   // Register the user, enroll the user, and import the new identity into the wallet.
