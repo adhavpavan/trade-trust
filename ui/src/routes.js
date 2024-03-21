@@ -18,15 +18,14 @@
 import Index from "./views/Index.js";
 import Profile from "./views/examples/Profile.js";
 // import Maps from "./views/examples/Maps.js";
-import Register from "./views/examples/Register.js";
 import Login from "./views/examples/Login.js";
+import Register from "./views/examples/Register.js";
 // import Tables from "./views/examples/Tables.js";
 // import Icons from "./views/examples/Icons.js";
-import Icons from './views/examples/Icons.js'
-import Dashboard from "./views/Dashboard/Dashboard.js";
-import Admin from "./views/examples/admin.js"
-import ContractHistory from "./views/examples/ContractHistory.js";
+import VerifyPage from "views/VerifyPage.js";
 import OrgList from "views/examples/OrgList.js";
+import ContractHistory from "./views/examples/ContractHistory.js";
+import Admin from "./views/examples/admin.js";
 
 
 
@@ -64,6 +63,13 @@ var routes = [
     name: "User Profile",
     icon: "ni ni-single-02 text-yellow",
     component: Profile,
+    layout: "/admin"
+  },
+  {
+    path: "/verify",
+    name: "Verify",
+    icon: "ni ni-single-02 text-yellow",
+    component: VerifyPage,
     layout: "/admin"
   },
   {
