@@ -4,6 +4,7 @@ const ApiError = require('../utils/ApiError');
 const { registerUser, getContractObject } = require('../utils/blockchainUtils');
 const Lot = require('../models/lot.model.js');
 const { NETWORK_ARTIFACTS_DEFAULT, BLOCKCHAIN_DOC_TYPE } = require('../utils/Constants');
+const { getSignedUrl } = require('../utils/fileUpload.js');
 
 /**
  * Create an lot
@@ -81,7 +82,19 @@ const getLotById = async (id) => {
 const result = {
   ...lot?.toJSON(),
   invoices,
-  bills,
+  bills: await Promise.all(bills.map(async (bill) => {
+    const metaData = bill?.metaData;
+    if (!metaData) return bill; // Return as is if metaData is missing
+    const { id: docId, orgName } = metaData;
+    const url = await getSignedUrl(docId, orgName);
+    return {
+      ...bill.toJSON(), // Convert to JSON to ensure proper serialization
+      metaData: {
+        ...metaData,
+        url
+      }
+    };
+  })),
   PODs
 }
   return result;
