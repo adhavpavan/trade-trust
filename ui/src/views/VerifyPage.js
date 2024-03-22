@@ -9,8 +9,8 @@ import { useHistory } from 'react-router-dom';
 import Header from "../components/Headers/Header.js";
 
 import { useSelector } from 'react-redux';
-import VerifyDocument from './examples/AddLot.js';
 import LotList from './examples/LotList.js';
+import VerifyDocument from './examples/VerifyDocument.js';
 const axios = require('axios')
 const config = require('../helper/config.js')
 
@@ -58,41 +58,6 @@ export default function VerifyPage() {
                 </FormGroup>
                 <VerifyDocument toggle={toggleModal} modal={modal} />
               </CardHeader>
-              <div>
-                <Nav tabs>
-                  <NavItem>
-                    <NavLink
-                      className={classnames({ active: activeTab === '1' })}
-                      onClick={() => { selectActiveTab('1'); }}
-                    >
-                      Lots
-                    </NavLink>
-                  </NavItem>
-                </Nav>
-
-
-                <TabContent activeTab={activeTab}>
-                  {activeTab == "1" ?
-                    <TabPane tabId="1">
-                      <Row>
-                        <Col sm="12">
-
-                          <LotList />
-                          {/* <ExpiringContracts /> */}
-
-                        </Col>
-                      </Row>
-                      {/* <Row>
-                        <Col sm="12" style={{ paddingTop: 100 }}>
-                          <Card body>
-                            <InProgressContract />
-                          </Card>
-                        </Col>
-                      </Row> */}
-                    </TabPane> : <></>
-                  }
-                </TabContent>
-              </div>
             </Card>
           </div>
         </Row>

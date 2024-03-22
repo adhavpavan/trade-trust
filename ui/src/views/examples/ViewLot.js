@@ -203,7 +203,10 @@ const ViewLot = (props) => {
         <Col>
           {/* Render links for each document type */}
           {lotDetail && lotDetail[type]?.map((item, i) => (
-            <a key={i} href={item.metaData.url}>{item.metaData.name}</a>
+            <>
+            <a key={i} href={item.metaData.url}>{item.metaData.name}</a>    
+            <span  key={i}>{" "} {item.id}</span>
+            </>
           ))}
         </Col>
       </FormGroup>

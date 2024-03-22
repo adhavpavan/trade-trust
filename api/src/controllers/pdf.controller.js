@@ -193,6 +193,10 @@ const verifyEBill = catchAsync(async (req, res) => {
   if (!bill) {
     return res.status(httpStatus.NOT_FOUND).send(getSuccessResponse(httpStatus.NOT_FOUND, 'Bill not found', {}));
   }
+
+  if (bill.metaData.contentHash!== dataHash) {
+    return res.status(httpStatus.BAD_REQUEST).send(getSuccessResponse(httpStatus.BAD_REQUEST, 'Bill hash does not match', {}));
+  }
   
 
 
